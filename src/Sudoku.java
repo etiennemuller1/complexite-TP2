@@ -48,12 +48,12 @@ public class Sudoku {
             {
                 int value = scanner.nextInt();
                 grille[j][i] = value;
-                if(value!=0)
+                if(value!=-0)
                 {
                     lignes[i].add(value);
                     colonnes[j].add(value);
                     regions[j/taille+3*i/taille-1].add(value);
-                    variables[i][j][value]=true;
+                    variables[i][j][value-1]=true;
                 }
             }
         }
@@ -78,7 +78,6 @@ public class Sudoku {
         {
             for(int j = 0;j<tailleCarre;j++)
             {
-
             }
         }
     }
