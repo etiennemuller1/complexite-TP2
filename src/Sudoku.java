@@ -74,10 +74,76 @@ public class Sudoku {
 
     public void toSAT()
     {
+        //chaque case ne peut pas avoir plus d'une valeur
         for (int i =0;i<tailleCarre;i++)
         {
             for(int j = 0;j<tailleCarre;j++)
             {
+                if(grille[i][j]==0)
+                {
+                    for (int k = 0; k<tailleCarre;k++)
+                    {
+                        for (int k2 = k+1; k2 < tailleCarre; k2++)
+                        {
+                                System.out.println("case" + (i+1) + "," + (j+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i + "" + j +""+ (k2 + 1) );
+                            }
+
+                    }
+                }
+                else
+                {
+                    System.out.println(i +""+j+""+grille[i][j]);
+                }
+            }
+        }
+        //chaque colonne ne peut pas avoir une même valeur sur plus d'une case
+        for (int j =0;j<tailleCarre;j++)
+        {
+            for(int k = 0;k<tailleCarre;k++)
+            {
+                    for (int i = 0; i<tailleCarre;i++)
+                    {
+                        for (int i2 = i+1; i2 < tailleCarre; i2++)
+                        {
+                            System.out.println("colonne" + (j+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i2 + "" + j +""+ (k + 1) );
+                        }
+
+                    }
+            }
+        }
+        //chaque colonne ne peut pas avoir une même valeur sur plus d'une case
+        for (int i =0;i<tailleCarre;i++)
+        {
+            for(int k = 0;k<tailleCarre;k++)
+            {
+                for (int j = 0; j<tailleCarre;j++)
+                {
+                    for (int j2 = j+1; j2 < tailleCarre; j2++)
+                    {
+                        System.out.println("ligne" + (i+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i + "" + j2 +""+ (k + 1) );
+                    }
+
+                }
+            }
+        }
+        for(int z = 0; z<taille;z++)
+        {
+            for(int w = 0; w<taille;w++)
+            {
+                for(int k = 0;k<tailleCarre;k++)
+                {
+                for (int i =z*taille;i<(z+1)*taille;i++) {
+                    for (int i2 =i;i2<(z+1)*taille;i2++) {
+                        for (int j = w * taille; j < (w + 1) * taille; j++) {
+                            for (int j2 = j; j2 < (w + 1) * taille; j2++) {
+                                if (i != i2 || j != j2){
+                                System.out.println("zone" + (z + 1) + "," + (w + 1) + " : " + "-" + i + "" + j + "" + (k + 1) + " " + "-" + i2 + "" + j2 + "" + (k + 1));
+                                }
+                            }
+                        }
+                    }
+                }
+                }
             }
         }
     }

@@ -8,6 +8,6 @@ public class Main {
         System.out.println(verificateur.affectations);
         System.out.println(verificateur.verifier());*/
         Sudoku sudoku = new Sudoku("/amuhome/m16014784/Bureau/Reduction/src/sudoku.txt");
-        sudoku.print();
+        sudoku.toSAT();
     }
 }
