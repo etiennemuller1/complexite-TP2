@@ -39,6 +39,18 @@ public class Verificateur {
         public String toString() {
             return litteraux.toString();
         }
+
+        static public Affectations fromFile(String path) throws FileNotFoundException {
+            Affectations affectations = new Affectations();
+            Scanner scan;
+
+            /* On tente d'ouvrir le fichier */
+            scan = new Scanner(new File(path));
+            while (scan.hasNext()) {
+                affectations.addLitteral(scan.nextInt());
+            }
+            return affectations;
+        }
     }
 
     /** Représente une formule de type SAT, composée de clauses */
@@ -70,7 +82,7 @@ public class Verificateur {
     public Verificateur(String fileSourceCNF, String fileSourceVerif) throws FileNotFoundException
     {
         lectureCNF(fileSourceCNF);
-        lectureVerif(fileSourceVerif);
+        affectations = Affectations.fromFile(fileSourceVerif);
     }
     private void lectureCNF(String fileSourceCNF) throws FileNotFoundException {
         File docCNF = new File(fileSourceCNF);
@@ -94,15 +106,7 @@ public class Verificateur {
             }
         }
     }
-    private void lectureVerif(String fileSourceVerif) throws FileNotFoundException {
-        File docVerif = new File(fileSourceVerif);
-        Scanner scannerVerif = new Scanner(docVerif);
-        affectations= new Affectations();
-        while(scannerVerif.hasNext())
-        {
-            affectations.addLitteral(scannerVerif.nextInt());
-        }
-    }
+
     public boolean verifier()
     {
         clauseIter:
