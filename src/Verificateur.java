@@ -41,6 +41,28 @@ public class Verificateur {
         }
     }
 
+    /** Représente une formule de type SAT, composée de clauses */
+    public static class Formule {
+        ArrayList<ArrayList<Integer>> clauses;
+
+        public Formule() {
+            this.clauses = new ArrayList<>();
+        }
+
+        public Formule(int nbClauses) {
+            this.clauses = new ArrayList<>(nbClauses);
+        }
+
+        /** Rajoute une clause dans la formule
+         *
+         * @param clause La clause, sous forme de liste de littéraux la composant
+         *               On suppose qu'elle est bien formulé (e.g. il n'y a pas de littéral 0)
+         */
+        public void addClause(ArrayList<Integer> clause) {
+            clauses.add(clause);
+        }
+    }
+
     int nbVariables;
     int nbClauses;
     ArrayList<ArrayList<Integer>> clauses;
