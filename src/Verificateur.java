@@ -1,13 +1,50 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 public class Verificateur {
+
+    public static class Affectations {
+        TreeSet<Integer> litteraux = new TreeSet<>();
+
+        /** Assigne la valeur vraie au littéral donné
+         * @param litteral Le littéral
+         */
+        public void addLitteral(int litteral) {
+            if (litteral == 0)
+                throw new IllegalArgumentException("Le littéral 0 n'a pas de sens.");
+
+            if (litteraux.contains(-litteral))
+                throw new IllegalArgumentException("Le littéral opposé est déjà assigné à vrai.");
+
+            litteraux.add(litteral);
+        }
+
+        /** Retourne la valeur du littéral donné
+         *
+         * Attention, si litteral ou son opposé n'ont jamais été rentrés dans
+         * cette instance d'Affectation, cette méthode retournera faux dans les deux cas !
+         * On compte sur la validité des fichiers d'affectation donnés pour ne pas avoir à gérer
+         * ce cas-là pour le moment.
+         * @param litteral Le littéral dont on souhaite connaitre la valeur.
+         * @return
+         */
+        public boolean contains(int litteral) {
+            return litteraux.contains(litteral);
+        }
+
+        public String toString() {
+            return litteraux.toString();
+        }
+    }
+
     int nbVariables;
     int nbClauses;
     ArrayList<ArrayList<Integer>> clauses;
-    ArrayList<Integer> affectations;
+    Affectations affectations;
     public Verificateur(String fileSourceCNF, String fileSourceVerif) throws FileNotFoundException
     {
         lectureCNF(fileSourceCNF);
@@ -38,10 +75,10 @@ public class Verificateur {
     private void lectureVerif(String fileSourceVerif) throws FileNotFoundException {
         File docVerif = new File(fileSourceVerif);
         Scanner scannerVerif = new Scanner(docVerif);
-        affectations= new ArrayList<>();
+        affectations= new Affectations();
         while(scannerVerif.hasNext())
         {
-            affectations.add(scannerVerif.nextInt());
+            affectations.addLitteral(scannerVerif.nextInt());
         }
     }
     public boolean verifier()
@@ -51,7 +88,7 @@ public class Verificateur {
         {
             for (int litteral:clause)
             {
-                if(affectations.contains(litteral))
+                if (affectations.contains(litteral))
                 {
                     continue clauseIter;
                 }
