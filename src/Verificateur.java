@@ -179,9 +179,9 @@ public class Verificateur {
         }
     }
 
+    private Formule formule;
+    private Affectations affectations;
 
-    Formule formule;
-    Affectations affectations;
     public Verificateur(String fileSourceCNF, String fileSourceVerif) throws FileNotFoundException
     {
         formule = Formule.fromFile(fileSourceCNF);
