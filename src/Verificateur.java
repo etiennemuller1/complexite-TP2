@@ -111,7 +111,74 @@ public class Verificateur {
             }
             return formule;
         }
+
+        /** Génère une formule tautologique
+         * La "taille" de celle-ci est équivalente à nbOfLitterals,
+         * étant donné que ceux-ci n'apparaissent qu'une fois dans la formule
+         *
+         * @param nbOfLiterals Le nombre de littéraux composant la formule
+         *                     Cette valeur sera arrondie à une valeur paire
+         * @return La formule tautologique générée
+         */
+        static public Formule generateTautology(int nbOfLiterals) {
+            if (nbOfLiterals < 0)
+                throw new IllegalArgumentException();
+            
+            if (nbOfLiterals % 2 == 1)
+                nbOfLiterals++;
+            int nbOfClauses = nbOfLiterals / 2;
+
+            Formule formule = new Formule(nbOfClauses, nbOfLiterals);
+            for (int clauseNb = 1; clauseNb <= nbOfClauses; clauseNb++) {
+                int literal = clauseNb;
+                ArrayList<Integer> clause = new ArrayList<>(2);
+                clause.add(literal);
+                clause.add(-literal);
+
+                formule.addClause(clause);
+            }
+
+            return formule;
+        }
+
+        /** Génère une formule impossible à satisfaire
+         * (je ne suis pas certain que l'on appelle ce type de formule une
+         * contradiction, à vérifier)
+         * La taille est équivalente au nombre de littéraux (cf. javadoc de generateTautology)
+         *
+         * @param nbOfLiterals Le nombre de littéraux composant la formule
+         *                     Cette valeur sera arrondie à une valeur paire
+         *
+         * @return La formule générée
+         */
+        static public Formule generateContradiction(int nbOfLiterals) {
+            if (nbOfLiterals < 0)
+                throw new IllegalArgumentException();
+            
+            if (nbOfLiterals % 2 == 1)
+                nbOfLiterals++;
+            int nbOfClauses = nbOfLiterals;
+            int nbOfVariables = nbOfLiterals / 2;
+
+            Formule formule = new Formule(nbOfClauses, nbOfLiterals);
+            for (int variable = 1; variable <= nbOfVariables; variable++) {
+                int literal = variable;
+
+                /* Clause contenant le littéral positif */
+                ArrayList<Integer> clausePositive = new ArrayList<>(1);
+                clausePositive.add(literal);
+                formule.addClause(clausePositive);
+
+                /* Clause contenant le littéral négatif */
+                ArrayList<Integer> clauseNegative = new ArrayList<>(1);
+                clauseNegative.add(-literal);
+                formule.addClause(clauseNegative);
+            }
+
+            return formule;
+        }
     }
+
 
     Formule formule;
     Affectations affectations;
