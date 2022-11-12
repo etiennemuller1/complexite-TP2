@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -54,15 +55,25 @@ public class Verificateur {
     }
 
     /** Représente une formule de type SAT, composée de clauses */
-    public static class Formule {
+    public static class Formule implements Iterable<ArrayList<Integer>> {
+        private int nbVariables;
+        private int nbClauses;
         ArrayList<ArrayList<Integer>> clauses;
 
-        public Formule() {
-            this.clauses = new ArrayList<>();
+        public Formule(int nbClauses, int nbVariables) {
+            this.nbClauses = nbClauses;
+            this.nbVariables = nbVariables;
+            this.clauses = new ArrayList<>(nbClauses);
         }
 
-        public Formule(int nbClauses) {
-            this.clauses = new ArrayList<>(nbClauses);
+        @Override
+        public Iterator iterator() {
+            return clauses.iterator();
+        }
+
+        @Override
+        public String toString() {
+            return clauses.toString();
         }
 
         /** Rajoute une clause dans la formule
@@ -73,44 +84,47 @@ public class Verificateur {
         public void addClause(ArrayList<Integer> clause) {
             clauses.add(clause);
         }
+
+        static public Formule fromFile(String path) throws FileNotFoundException {
+            Formule formule;
+            Scanner scan;
+            int nbVariables, nbClauses;
+
+            /* On tente d'ouvrir le fichier */
+            scan = new Scanner(new File(path));
+            scan.next(); /* On saute "p" */
+            scan.next(); /* On saute "cnf" */
+            nbVariables = scan.nextInt();
+            nbClauses = scan.nextInt();
+            formule = new Formule(nbClauses, nbVariables);
+
+            /* On récupère maintenant les clauses */
+            for (int i = 0; i < nbClauses; i++) {
+                ArrayList<Integer> clause = new ArrayList<>();
+                formule.clauses.add(clause);
+
+                int literal = scan.nextInt();
+                while (literal != 0) { /* Tant qu'on est pas à la fin de la clause */
+                    clause.add(literal);
+                    literal = scan.nextInt();
+                }
+            }
+            return formule;
+        }
     }
 
-    int nbVariables;
-    int nbClauses;
-    ArrayList<ArrayList<Integer>> clauses;
+    Formule formule;
     Affectations affectations;
     public Verificateur(String fileSourceCNF, String fileSourceVerif) throws FileNotFoundException
     {
-        lectureCNF(fileSourceCNF);
+        formule = Formule.fromFile(fileSourceCNF);
         affectations = Affectations.fromFile(fileSourceVerif);
-    }
-    private void lectureCNF(String fileSourceCNF) throws FileNotFoundException {
-        File docCNF = new File(fileSourceCNF);
-        Scanner scannerCNF = new Scanner(docCNF);
-        scannerCNF.next();
-        scannerCNF.next();
-        nbVariables = scannerCNF.nextInt();
-        nbClauses = scannerCNF.nextInt();
-        clauses = new ArrayList<>();
-        for(int i = 0; i<nbClauses;i++)
-        {
-            clauses.add(new ArrayList<>());
-        }
-        for(int i = 0;i<nbClauses;i++)
-        {
-            int literalTemp = scannerCNF.nextInt();
-            while(literalTemp!=0)
-            {
-                clauses.get(i).add(literalTemp);
-                literalTemp=scannerCNF.nextInt();
-            }
-        }
     }
 
     public boolean verifier()
     {
         clauseIter:
-        for (ArrayList<Integer> clause: clauses)
+        for (ArrayList<Integer> clause: formule)
         {
             for (int litteral:clause)
             {
