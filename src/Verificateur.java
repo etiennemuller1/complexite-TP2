@@ -188,6 +188,11 @@ public class Verificateur {
         affectations = Affectations.fromFile(fileSourceVerif);
     }
 
+    public Verificateur(Formule formule, Affectations affectations) {
+        this.formule = formule;
+        this.affectations = affectations;
+    }
+
     public boolean verifier()
     {
         clauseIter:
