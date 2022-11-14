@@ -113,22 +113,20 @@ public class Verificateur {
         }
 
         /** Génère une formule tautologique
-         * La "taille" de celle-ci est équivalente à nbOfLitterals,
-         * étant donné que ceux-ci n'apparaissent qu'une fois dans la formule
+         * La "taille" de celle-ci est équivalente à 2*nbOfVariables,
+         * étant donné que ceux-ci n'apparaissent que 2 fois dans la formule
+         * (1 littéral positif et 1 littéral négatif)
          *
-         * @param nbOfLiterals Le nombre de littéraux composant la formule
-         *                     Cette valeur sera arrondie à une valeur paire
+         * @param nbOfVariables Le nombre de variables composant la formule
          * @return La formule tautologique générée
          */
-        static public Formule generateTautology(int nbOfLiterals) {
-            if (nbOfLiterals < 0)
+        static public Formule generateTautology(int nbOfVariables) {
+            if (nbOfVariables < 0)
                 throw new IllegalArgumentException();
-            
-            if (nbOfLiterals % 2 == 1)
-                nbOfLiterals++;
-            int nbOfClauses = nbOfLiterals / 2;
 
-            Formule formule = new Formule(nbOfClauses, nbOfLiterals);
+            int nbOfClauses = nbOfVariables;
+
+            Formule formule = new Formule(nbOfClauses, nbOfVariables);
             for (int clauseNb = 1; clauseNb <= nbOfClauses; clauseNb++) {
                 int literal = clauseNb;
                 ArrayList<Integer> clause = new ArrayList<>(2);
@@ -144,21 +142,18 @@ public class Verificateur {
         /** Génère une formule impossible à satisfaire
          * (je ne suis pas certain que l'on appelle ce type de formule une
          * contradiction, à vérifier)
-         * La taille est équivalente au nombre de littéraux (cf. javadoc de generateTautology)
+         * La taille est équivalente au nombre de littéraux, donc ici 2*nbOfVariables
+         * (cf. javadoc de generateTautology)
          *
-         * @param nbOfLiterals Le nombre de littéraux composant la formule
-         *                     Cette valeur sera arrondie à une valeur paire
-         *
+         * @param nbOfVariables Le nombre de variables composant la formule*
          * @return La formule générée
          */
-        static public Formule generateContradiction(int nbOfLiterals) {
-            if (nbOfLiterals < 0)
+        static public Formule generateContradiction(int nbOfVariables) {
+            if (nbOfVariables < 0)
                 throw new IllegalArgumentException();
             
-            if (nbOfLiterals % 2 == 1)
-                nbOfLiterals++;
+            int nbOfLiterals = nbOfVariables * 2;
             int nbOfClauses = nbOfLiterals;
-            int nbOfVariables = nbOfLiterals / 2;
 
             Formule formule = new Formule(nbOfClauses, nbOfLiterals);
             for (int variable = 1; variable <= nbOfVariables; variable++) {
