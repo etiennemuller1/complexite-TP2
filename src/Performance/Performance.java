@@ -1,9 +1,12 @@
 package Performance;
 
+import main.Verificateur;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.function.IntToLongFunction;
 
 public class Performance {
 
@@ -49,14 +52,15 @@ public class Performance {
         }
     }
 
-    /** Calcule les performances d'un algorithme à l'aide d'un Tester
+    /** Calcule les performances d'un algorithme
      *
      * @param upTo Jusqu'à quelle taille tester, inclus
      * @param nbOfMeasures Le nombre de mesures effectuées par taille
-     * @param tester Le testeur d'algorithme à utiliser
+     * @param func Le testeur d'algorithme à utiliser, prenant la taille de entrée à générer pour les tests et
+     *             retournant le temps nécessaire pour exécuter l'algorithme sur cette entrée générée
      * @return
      */
-    public static Double[] getVerificateurPerf(int upTo, int nbOfMeasures, Tester tester) {
+    private static Double[] getPerformance(int upTo, int nbOfMeasures, IntToLongFunction func) {
         upTo++; /* Afin d'inclure upTo dans les calculs */
         Double[] performance = new Double[upTo];
 
@@ -66,12 +70,44 @@ public class Performance {
             /* On procède à plusieurs mesures afin de lisser la courbe
              * et mieux capturer sa "tendance" */
             for (int measure = 0; measure < nbOfMeasures; measure++) {
-                measures[measure] = (double) tester.test(size) / NANOSECONDS_TO_SECONDS;
+                measures[measure] = (double) func.applyAsLong(size) / NANOSECONDS_TO_SECONDS;
             }
             performance[size] = getMean(measures);
         }
 
         return performance;
+    }
+
+    public static Double[] getVerifTautologyPerf(int upTo, int nbOfMeasures) {
+        IntToLongFunction func = (size) -> {
+            Instant before, after;
+            Verificateur.Formule formule = Verificateur.Formule.generateTautology(size);
+            Verificateur.Affectations affectations = Verificateur.Affectations.generateEverythingTrue(size);
+
+            before = Instant.now();
+            formule.verify(affectations);
+            after = Instant.now();
+
+            return before.until(after, ChronoUnit.NANOS);
+        };
+
+        return getPerformance(upTo, nbOfMeasures, func);
+    }
+
+    private static Double[] getVerifContradictionPerf(int upTo, int nbOfMeasures) {
+        IntToLongFunction func = (size) -> {
+            Instant before, after;
+            Verificateur.Formule formule = Verificateur.Formule.generateContradiction(size);
+            Verificateur.Affectations affectations = Verificateur.Affectations.generateEverythingTrue(size);
+
+            before = Instant.now();
+            formule.verify(affectations);
+            after = Instant.now();
+
+            return before.until(after, ChronoUnit.NANOS);
+        };
+
+        return getPerformance(upTo, nbOfMeasures, func);
     }
 
     /** Calcule la moyenne de toutes les valeurs du tableau array
