@@ -2,7 +2,6 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -14,16 +13,16 @@ public class Verificateur {
         TreeSet<Integer> litteraux = new TreeSet<>();
 
         /** Assigne la valeur vraie au littéral donné
-         * @param litteral Le littéral
+         * @param literal Le littéral
          */
-        public void addLitteral(int litteral) {
-            if (litteral == 0)
+        public void addLiteral(int literal) {
+            if (literal == 0)
                 throw new IllegalArgumentException("Le littéral 0 n'a pas de sens.");
 
-            if (litteraux.contains(-litteral))
+            if (litteraux.contains(-literal))
                 throw new IllegalArgumentException("Le littéral opposé est déjà assigné à vrai.");
 
-            litteraux.add(litteral);
+            litteraux.add(literal);
         }
 
         /** Retourne la valeur du littéral donné
@@ -50,7 +49,7 @@ public class Verificateur {
             /* On tente d'ouvrir le fichier */
             scan = new Scanner(new File(path));
             while (scan.hasNext()) {
-                affectations.addLitteral(scan.nextInt());
+                affectations.addLiteral(scan.nextInt());
             }
             return affectations;
         }
@@ -63,7 +62,7 @@ public class Verificateur {
         static public Affectations generateEverythingTrue(int size) {
             Affectations affectations = new Affectations();
             for (int variable = 1; variable <= size; variable++)
-                affectations.addLitteral(variable);
+                affectations.addLiteral(variable);
 
             return affectations;
         }
@@ -76,7 +75,7 @@ public class Verificateur {
         static public Affectations generateEverythingFalse(int size) {
             Affectations affectations = new Affectations();
             for (int variable = 1; variable <= size; variable++)
-                affectations.addLitteral(-variable);
+                affectations.addLiteral(-variable);
 
             return affectations;
         }
@@ -200,6 +199,18 @@ public class Verificateur {
 
             return formule;
         }
+
+        public boolean verify(Affectations affectations) {
+            clauseIter:
+            for (ArrayList<Integer> clause : this) {
+                for (int literal : clause) {
+                    if (affectations.contains(literal))
+                        continue clauseIter;
+                }
+                return false;
+            }
+            return true;
+        }
     }
 
     private Formule formule;
@@ -218,18 +229,6 @@ public class Verificateur {
 
     public boolean verifier()
     {
-        clauseIter:
-        for (ArrayList<Integer> clause: formule)
-        {
-            for (int litteral:clause)
-            {
-                if (affectations.contains(litteral))
-                {
-                    continue clauseIter;
-                }
-            }
-            return false;
-        }
-        return true;
+        return formule.verify(affectations);
     }
 }
