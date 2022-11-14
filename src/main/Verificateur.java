@@ -54,6 +54,32 @@ public class Verificateur {
             }
             return affectations;
         }
+
+        /** Génère une affectation où toutes les variables sont vraies
+         *
+         * @param size Le nombre de variables dans l'affectation
+         * @return L'affectation
+         */
+        static public Affectations generateEverythingTrue(int size) {
+            Affectations affectations = new Affectations();
+            for (int variable = 1; variable <= size; variable++)
+                affectations.addLitteral(variable);
+
+            return affectations;
+        }
+
+        /** Génère une affectation où toutes les variables sont fausses
+         *
+         * @param size Le nombre de variables dans l'affectation
+         * @return L'affectation
+         */
+        static public Affectations generateEverythingFalse(int size) {
+            Affectations affectations = new Affectations();
+            for (int variable = 1; variable <= size; variable++)
+                affectations.addLitteral(-variable);
+
+            return affectations;
+        }
     }
 
     /** Représente une formule de type SAT, composée de clauses */
