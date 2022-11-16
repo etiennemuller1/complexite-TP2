@@ -83,4 +83,32 @@ public class Performance {
         return total / array.length;
     }
 
+    /** Exporte le tableau de benchmark sous forme écrite,
+     * dans un fichier
+     * @param performance Le tableau comportant les résultats des tests
+     * @param filename Le nom du fichier où sera exporté les résultats
+     */
+    public static void exportFile(Double[] performance, String filename) {
+        FileWriter writer;
+        try {
+            writer = new FileWriter(filename, false);
+        } catch (IOException e) {
+            System.out.println("Error when exporting the benchmark file.");
+            return;
+        }
+
+        try {
+            for (Double d : performance) {
+                writer.write(d.toString() + "\n");
+            }
+        } catch (IOException e) {
+            System.out.println("Error when writing to the benchmark file.");
+            return;
+        }
+
+        try { writer.close(); } catch (IOException e) {
+            System.out.println("Error when closing the writer.");
+        }
+    }
+
 }
