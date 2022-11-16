@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -72,8 +74,8 @@ public class Sudoku {
         }
     }
 
-    public void toSAT()
-    {
+    public void toSAT() throws FileNotFoundException {
+        PrintWriter writer = new PrintWriter("sudokuSat");
         //chaque case ne peut pas avoir plus d'une valeur
         for (int i =0;i<tailleCarre;i++)
         {
