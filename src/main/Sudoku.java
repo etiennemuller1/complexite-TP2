@@ -1,9 +1,9 @@
+package main;
+
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Sudoku {
@@ -134,17 +134,17 @@ public class Sudoku {
             {
                 for(int k = 0;k<tailleCarre;k++)
                 {
-                for (int i =z*taille;i<(z+1)*taille;i++) {
-                    for (int i2 =i;i2<(z+1)*taille;i2++) {
-                        for (int j = w * taille; j < (w + 1) * taille; j++) {
-                            for (int j2 = j; j2 < (w + 1) * taille; j2++) {
+                    for (int i =z*taille;i<(z+1)*taille;i++) {
+                        for (int i2 =i;i2<(z+1)*taille;i2++) {
+                          for (int j = w * taille; j < (w + 1) * taille; j++) {
+                              for (int j2 = j; j2 < (w + 1) * taille; j2++) {
                                 if (i != i2 || j != j2){
                                 System.out.println("zone" + (z + 1) + "," + (w + 1) + " : " + "-" + i + "" + j + "" + (k + 1) + " " + "-" + i2 + "" + j2 + "" + (k + 1));
                                 }
-                            }
+                              }
+                          }
                         }
                     }
-                }
                 }
             }
         }
