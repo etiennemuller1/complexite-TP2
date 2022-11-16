@@ -1,9 +1,9 @@
 package main;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Sudoku {
@@ -74,27 +74,43 @@ public class Sudoku {
         }
     }
 
-    public void toSAT() throws FileNotFoundException {
-        PrintWriter writer = new PrintWriter("sudokuSat");
+    public void toSAT() throws IOException {
+        File file = new File("SudokuSat.txt");
+        if (file.exists()) {
+            file.delete();
+        }
+        file.createNewFile();
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+        int nbVariable = tailleCarre*tailleCarre*tailleCarre;
+        ArrayList<String> cnf = new ArrayList<>();
         //chaque case ne peut pas avoir plus d'une valeur
+        //mais en a au moins une
         for (int i =0;i<tailleCarre;i++)
         {
             for(int j = 0;j<tailleCarre;j++)
             {
                 if(grille[i][j]==0)
                 {
+
+                    String auMoinsUneValeur = "";
                     for (int k = 0; k<tailleCarre;k++)
                     {
                         for (int k2 = k+1; k2 < tailleCarre; k2++)
                         {
-                                System.out.println("case" + (i+1) + "," + (j+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i + "" + j +""+ (k2 + 1) );
-                            }
+                            cnf.add("-"+i + "" + j +""+ (k+1) + " " + "-" + i + "" + j +""+ (k2+1) + " 0" );
+                                //System.out.println("case" + (i+1) + "," + (j+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i + "" + j +""+ (k2 + 1) );
 
+                            }
+                        auMoinsUneValeur += (i + "" + j + "" + (k+1) + " ");
                     }
+                    auMoinsUneValeur += (0);
+                    cnf.add(auMoinsUneValeur);
                 }
                 else
                 {
-                    System.out.println(i +""+j+""+grille[i][j]);
+                    cnf.add(i +""+j+""+grille[i][j] +" 0");
+                    //System.out.println(i +""+j+""+grille[i][j]);
                 }
             }
         }
@@ -107,7 +123,8 @@ public class Sudoku {
                     {
                         for (int i2 = i+1; i2 < tailleCarre; i2++)
                         {
-                            System.out.println("colonne" + (j+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i2 + "" + j +""+ (k + 1) );
+                            cnf.add("-"+i + "" + j +""+ (k+1) + " " + "-" + i2 + "" + j +""+ (k+1) + " 0");
+                            //System.out.println("colonne" + (j+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i2 + "" + j +""+ (k + 1) );
                         }
 
                     }
@@ -122,7 +139,8 @@ public class Sudoku {
                 {
                     for (int j2 = j+1; j2 < tailleCarre; j2++)
                     {
-                        System.out.println("ligne" + (i+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i + "" + j2 +""+ (k + 1) );
+                        cnf.add("-"+i + "" + j +""+ (k+1) + " " + "-" + i + "" + j2 +""+ (k+1) + " 0");
+                        //System.out.println("ligne" + (i+1) + " : " + "-"+i + "" + j +""+ (k + 1) + " " + "-" + i + "" + j2 +""+ (k + 1) );
                     }
 
                 }
@@ -139,7 +157,9 @@ public class Sudoku {
                           for (int j = w * taille; j < (w + 1) * taille; j++) {
                               for (int j2 = j; j2 < (w + 1) * taille; j2++) {
                                 if (i != i2 || j != j2){
-                                System.out.println("zone" + (z + 1) + "," + (w + 1) + " : " + "-" + i + "" + j + "" + (k + 1) + " " + "-" + i2 + "" + j2 + "" + (k + 1));
+                                    cnf.add("-" + i + "" + j + "" + (k+1) + " " + "-" + i2 + "" + j2 + "" + (k+1) +" 0");
+                                //System.out.println("zone" + (z + 1) + "," + (w + 1) + " : " + "-" + i + "" + j + "" + (k + 1) + " " + "-" + i2 + "" + j2 + "" + (k + 1));
+
                                 }
                               }
                           }
@@ -148,5 +168,13 @@ public class Sudoku {
                 }
             }
         }
+
+        bw.write("p cnf " +" " + (tailleCarre +1) * (tailleCarre +1) * (tailleCarre+1) + " " + cnf.size());
+        //nbVariable est faux car on calcule ici la valeur en base 9 donc le nombre max ici est 889 et pas 729
+        for (String c:cnf) {
+            bw.newLine();
+            bw.write(c);
+        }
+        bw.close();
     }
 }
