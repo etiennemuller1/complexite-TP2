@@ -2,40 +2,56 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Verificateur {
 
     public static class Affectations {
-        TreeSet<Integer> litteraux = new TreeSet<>();
+        BitSet litteraux;   /* Stocke les assignations des variables */
+
+        public Affectations() {
+            litteraux = new BitSet();
+        }
+
+        public Affectations(int nbOfLiterals) {
+            litteraux = new BitSet(nbOfLiterals);
+        }
 
         /** Assigne la valeur vraie au littéral donné
-         * @param literal Le littéral
+         * @param literal Le littéral, sous la forme :
+         *                  * positif :  numVariable
+         *                  * négatif : -numVariable
          */
         public void addLiteral(int literal) {
             if (literal == 0)
                 throw new IllegalArgumentException("Le littéral 0 n'a pas de sens.");
 
-            if (litteraux.contains(-literal))
-                throw new IllegalArgumentException("Le littéral opposé est déjà assigné à vrai.");
+            boolean value = literal > 0;  /* Assigne-t-on à vrai ou à faux ? */
 
-            litteraux.add(literal);
+            if (!value)
+                literal = -literal;
+
+            litteraux.set(literal, value);
         }
 
         /** Retourne la valeur du littéral donné
          *
-         * Attention, si litteral ou son opposé n'ont jamais été rentrés dans
-         * cette instance d'Affectation, cette méthode retournera faux dans les deux cas !
-         * On compte sur la validité des fichiers d'affectation donnés pour ne pas avoir à gérer
-         * ce cas-là pour le moment.
-         * @param litteral Le littéral dont on souhaite connaitre la valeur.
-         * @return
+         * @param literal Le littéral dont on souhaite connaitre la valeur,
+         *                à donner sous la forme :
+                            * positif :  numVariable
+         *                  * négatif : -numVariable
+         * @return La valeur du littéral
          */
-        public boolean contains(int litteral) {
-            return litteraux.contains(litteral);
+        public boolean contains(int literal) {
+            if (literal == 0)
+                throw new IllegalArgumentException("Le littéral 0 n'a pas de sens.");
+
+            boolean value = literal > 0;  /* S'intéresse-t-on au littéral vrai ou faux ? */
+            if (value) /* On veut le littéral positif */
+                return litteraux.get(literal);
+            else       /* On veut le littéral négatif */
+                literal = -literal;
+                return !litteraux.get(literal);
         }
 
         public String toString() {
@@ -60,7 +76,7 @@ public class Verificateur {
          * @return L'affectation
          */
         static public Affectations generateEverythingTrue(int size) {
-            Affectations affectations = new Affectations();
+            Affectations affectations = new Affectations(size+1);
             for (int variable = 1; variable <= size; variable++)
                 affectations.addLiteral(variable);
 
@@ -73,7 +89,7 @@ public class Verificateur {
          * @return L'affectation
          */
         static public Affectations generateEverythingFalse(int size) {
-            Affectations affectations = new Affectations();
+            Affectations affectations = new Affectations(size+1);
             for (int variable = 1; variable <= size; variable++)
                 affectations.addLiteral(-variable);
 
@@ -230,5 +246,10 @@ public class Verificateur {
     public boolean verifier()
     {
         return formule.verify(affectations);
+    }
+
+    @Override
+    public String toString() {
+        return formule.toString() + affectations.toString();
     }
 }
