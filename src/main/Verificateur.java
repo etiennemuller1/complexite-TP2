@@ -99,14 +99,15 @@ public class Verificateur {
 
     /** Représente une formule de type SAT, composée de clauses */
     public static class Formule implements Iterable<ArrayList<Integer>> {
-        private int nbVariables;
-        private int nbClauses;
         ArrayList<ArrayList<Integer>> clauses;
 
-        public Formule(int nbClauses, int nbVariables) {
-            this.nbClauses = nbClauses;
-            this.nbVariables = nbVariables;
-            this.clauses = new ArrayList<>(nbClauses);
+        /** Construit une nouvelle Formule
+         *
+         * @param size Le nombre de clauses que l'on compte mettre dans cette instance
+         *             Cette valeur peut être inexacte
+         */
+        public Formule(int size) {
+            this.clauses = new ArrayList<>(size);
         }
 
         @Override
@@ -139,7 +140,7 @@ public class Verificateur {
             scan.next(); /* On saute "cnf" */
             nbVariables = scan.nextInt();
             nbClauses = scan.nextInt();
-            formule = new Formule(nbClauses, nbVariables);
+            formule = new Formule(nbClauses);
 
             /* On récupère maintenant les clauses */
             for (int i = 0; i < nbClauses; i++) {
@@ -169,7 +170,7 @@ public class Verificateur {
 
             int nbOfClauses = nbOfVariables;
 
-            Formule formule = new Formule(nbOfClauses, nbOfVariables);
+            Formule formule = new Formule(nbOfClauses);
             for (int clauseNb = 1; clauseNb <= nbOfClauses; clauseNb++) {
                 int literal = clauseNb;
                 ArrayList<Integer> clause = new ArrayList<>(2);
@@ -198,7 +199,7 @@ public class Verificateur {
             int nbOfLiterals = nbOfVariables * 2;
             int nbOfClauses = nbOfLiterals;
 
-            Formule formule = new Formule(nbOfClauses, nbOfLiterals);
+            Formule formule = new Formule(nbOfClauses);
             for (int variable = 1; variable <= nbOfVariables; variable++) {
                 int literal = variable;
 
