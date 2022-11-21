@@ -19,6 +19,11 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         this.clauses = new ArrayList<>(size);
     }
 
+    /** Construit une nouvelle formule */
+    public Formule() {
+        this.clauses = new ArrayList<>();
+    }
+
     @Override
     public Iterator iterator() {
         return clauses.iterator();
