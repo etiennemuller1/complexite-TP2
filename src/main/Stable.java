@@ -13,7 +13,7 @@ public class Stable {
      * @param variableSommet Le sommet
      * @param variableVoisin Son voisin
      */
-    private void addEdgeConstraint(int variableSommet, int variableVoisin) {
+    private void addNeighbourConstraint(int variableSommet, int variableVoisin) {
         ArrayList<Integer> constraint = new ArrayList<>(2);
         constraint.add(-variableSommet);
         constraint.add(-variableVoisin);
