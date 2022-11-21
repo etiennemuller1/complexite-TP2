@@ -1,5 +1,6 @@
 package Performance;
 
+import main.Formule;
 import main.Verificateur;
 
 import java.io.FileWriter;
@@ -41,7 +42,7 @@ public class Performance {
     public static Double[] getVerifTautologyPerf(int upTo, int nbOfMeasures) {
         IntToLongFunction func = (size) -> {
             Instant before, after;
-            Verificateur.Formule formule = Verificateur.Formule.generateTautology(size);
+            Formule formule = Formule.generateTautology(size);
             Verificateur.Affectations affectations = Verificateur.Affectations.generateEverythingTrue(size);
 
             before = Instant.now();
@@ -57,7 +58,7 @@ public class Performance {
     public static Double[] getVerifContradictionPerf(int upTo, int nbOfMeasures) {
         IntToLongFunction func = (size) -> {
             Instant before, after;
-            Verificateur.Formule formule = Verificateur.Formule.generateContradiction(size);
+            Formule formule = Formule.generateContradiction(size);
             Verificateur.Affectations affectations = Verificateur.Affectations.generateEverythingTrue(size);
 
             before = Instant.now();
