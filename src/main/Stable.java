@@ -83,6 +83,18 @@ public class Stable {
     private Formule clauses;
     private Graph graph;
 
+    /** Construit une nouvelle instance Stable à partir d'un graphe
+     *
+     * @param graph Le graphe dont on souhaite obtenir la réduction
+     */
+    public Stable(Graph graph) {
+        this.graph = graph;
+    }
+
+    /** Calcule toute la réduction SAT à partir du graphe
+     *
+     * @return La formule générée
+     */
     public Formule computeAndGetFormula() {
         clauses = new Formule();
         
