@@ -38,10 +38,20 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         clauses.add(clause);
     }
 
+    /** Retourne le nombre de clauses présentes dans la formule au moment de l'appel
+     *
+     * @return Le nombre de clauses
+     */
     public int getNbOfClauses() {
         return clauses.size();
     }
 
+    /** Lit un fichier sous forme DIMACS CNF et construit une instance
+     *
+     * @param path Le chemin vers le fichier DIMACS CNF
+     * @return L'instance construite
+     * @throws FileNotFoundException
+     */
     static public Formule fromFile(String path) throws FileNotFoundException {
         Formule formule;
         Scanner scan;
