@@ -129,6 +129,10 @@ public class Verificateur {
             clauses.add(clause);
         }
 
+        public int getNbOfClauses() {
+            return clauses.size();
+        }
+
         static public Formule fromFile(String path) throws FileNotFoundException {
             Formule formule;
             Scanner scan;
