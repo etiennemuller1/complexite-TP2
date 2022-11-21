@@ -84,9 +84,10 @@ public class Stable {
     private Graph graph;
 
     public Formule computeAndGetFormula() {
-        clauses = new Formule(); /*TODO: Potentiellement, indiquer le nombre de clauses */
+        clauses = new Formule();
         
         addAllNeighboursConstraints();
+        /*TODO: Rajouter les nouvelles contraintes */
 
         return clauses;
     }
