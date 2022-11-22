@@ -1,11 +1,7 @@
 package Performance;
 
-import main.Stable;
-
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.function.IntToLongFunction;
 
 public class Performance {
@@ -36,23 +32,6 @@ public class Performance {
         }
 
         return performance;
-    }
-
-    final static private double PERF_GRAPH_DENSITY = 0.7;
-    public static Double[] getStablePerf(int upTo, int nbOfMeasures) {
-        IntToLongFunction func = (size) -> {
-            Instant before, after;
-            Stable.Graph graph = Stable.Graph.generateRandomGraph(size, PERF_GRAPH_DENSITY);
-            Stable stable = new Stable(graph);
-
-            before = Instant.now();
-            stable.computeAndGetFormula();
-            after = Instant.now();
-
-            return before.until(after, ChronoUnit.NANOS);
-        };
-
-        return getPerformance(upTo, nbOfMeasures, func);
     }
 
     /** Calcule la moyenne de toutes les valeurs du tableau array
