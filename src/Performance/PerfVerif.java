@@ -9,6 +9,11 @@ import java.util.function.IntToLongFunction;
 
 /** Teste les performances pour premier mini-projet, le vérificateur de formules */
 public class PerfVerif {
+
+    /*NOTE(Axel): On pourrait probablement avoir de bien meilleures performances en évitant de générer la formule
+     * et l'affectation à chaque appel de getPerformance, et la compléter petit à petit au fur et à mesure
+     * des appels… */
+
     public static Double[] getVerifTautologyPerf(int upTo, int nbOfMeasures) {
         IntToLongFunction func = (size) -> {
             Instant before, after;
