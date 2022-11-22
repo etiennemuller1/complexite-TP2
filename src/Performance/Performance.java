@@ -1,8 +1,6 @@
 package Performance;
 
-import main.Formule;
 import main.Stable;
-import main.Verificateur;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +10,7 @@ import java.util.function.IntToLongFunction;
 
 public class Performance {
 
-    final static int NANOSECONDS_TO_SECONDS = 1_000_000_000;
+    private final static int NANOSECONDS_TO_SECONDS = 1_000_000_000;
 
     /** Calcule les performances d'un algorithme
      *
@@ -22,7 +20,7 @@ public class Performance {
      *             retournant le temps nécessaire pour exécuter l'algorithme sur cette entrée générée
      * @return
      */
-    private static Double[] getPerformance(int upTo, int nbOfMeasures, IntToLongFunction func) {
+    public static Double[] getPerformance(int upTo, int nbOfMeasures, IntToLongFunction func) {
         upTo++; /* Afin d'inclure upTo dans les calculs */
         Double[] performance = new Double[upTo];
 
@@ -38,38 +36,6 @@ public class Performance {
         }
 
         return performance;
-    }
-
-    public static Double[] getVerifTautologyPerf(int upTo, int nbOfMeasures) {
-        IntToLongFunction func = (size) -> {
-            Instant before, after;
-            Formule formule = Formule.generateTautology(size);
-            Verificateur.Affectations affectations = Verificateur.Affectations.generateEverythingTrue(size);
-
-            before = Instant.now();
-            formule.verify(affectations);
-            after = Instant.now();
-
-            return before.until(after, ChronoUnit.NANOS);
-        };
-
-        return getPerformance(upTo, nbOfMeasures, func);
-    }
-
-    public static Double[] getVerifContradictionPerf(int upTo, int nbOfMeasures) {
-        IntToLongFunction func = (size) -> {
-            Instant before, after;
-            Formule formule = Formule.generateContradiction(size);
-            Verificateur.Affectations affectations = Verificateur.Affectations.generateEverythingTrue(size);
-
-            before = Instant.now();
-            formule.verify(affectations);
-            after = Instant.now();
-
-            return before.until(after, ChronoUnit.NANOS);
-        };
-
-        return getPerformance(upTo, nbOfMeasures, func);
     }
 
     final static private double PERF_GRAPH_DENSITY = 0.7;
