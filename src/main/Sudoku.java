@@ -45,7 +45,7 @@ public class Sudoku {
 
         for (int i = 0; i < sudoku.tailleCarre; i++) {
             for (int j = 0; j < sudoku.tailleCarre; j++) {
-                int r = random.nextInt(0,100);
+                int r = random.nextInt(100);
                 if(r<densité)
                 {
                     int value = random.nextInt(9);
