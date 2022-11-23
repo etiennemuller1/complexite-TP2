@@ -1,8 +1,9 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Clause {
+public class Clause implements Iterable<Integer> {
     ArrayList<Integer> clauseParts = new ArrayList<>();
 
     public void add(int clausePart) {
@@ -17,5 +18,10 @@ public class Clause {
         }
         line += "0";
         return line;
+    }
+
+    @Override
+    public Iterator<Integer> iterator() {
+        return clauseParts.iterator();
     }
 }

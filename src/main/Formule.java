@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * Représente une formule de type SAT, composée de clauses
  */
-public class Formule implements Iterable<ArrayList<Integer>> {
+public class Formule implements Iterable<Clause> {
     ArrayList<Clause> clauses;
 
     /**
@@ -29,7 +29,7 @@ public class Formule implements Iterable<ArrayList<Integer>> {
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<Clause> iterator() {
         return clauses.iterator();
     }
 
@@ -167,7 +167,7 @@ public class Formule implements Iterable<ArrayList<Integer>> {
      */
     public boolean verify(Verificateur.Affectations affectations) {
         clauseIter:
-        for (ArrayList<Integer> clause : this) {
+        for (Clause clause : this) {
             for (int literal : clause) {
                 if (affectations.contains(literal))
                     continue clauseIter;
