@@ -14,21 +14,17 @@ public class PerformanceResult {
     /** Représente un benchmark
      * (eg. le temps d'un algo de réduction, et rien d'autre) */
     public static class PerformanceBenchmark {
-        private String name;
-
         public Double[] perf;
 
         /**
          *
-         * @param name Le nom du benchmark
          * @param upTo Jusqu'à quelle taille on peut coder des mesures, exclus
          */
-        public PerformanceBenchmark(String name, int upTo) {
-            this.name = name;
+        public PerformanceBenchmark(int upTo) {
             this.perf = new Double[upTo];
         }
 
-        public void export() {
+        public void export(String name) {
             FileWriter writer;
             try {
                 writer = new FileWriter(name, false);
@@ -60,17 +56,12 @@ public class PerformanceResult {
      * @param upTo Jusqu'à quelle taille on peut coder des mesures,
      *             pour tous les benchmarks
      * @param nbOfBenchmarks Le nombre de benchmark
-     * @param names Tableau contenant le nom des différents benchmarks, dans l'ordre
-     *              Doit avoir nbOfBenchmarks comme taille
      */
-    public PerformanceResult(int upTo, int nbOfBenchmarks, String[] names) {
-        if (names.length != nbOfBenchmarks)
-            throw new IllegalArgumentException("Il y a trop/pas assez de noms pour les benchmarks.");
-
+    public PerformanceResult(int upTo, int nbOfBenchmarks) {
         this.upTo = upTo;
         this.benchmarks = new PerformanceBenchmark[nbOfBenchmarks];
         for (int i = 0; i < nbOfBenchmarks; i++) {
-            this.benchmarks[i] = new PerformanceBenchmark(names[i], upTo);
+            this.benchmarks[i] = new PerformanceBenchmark(upTo);
         }
     }
 
@@ -84,9 +75,17 @@ public class PerformanceResult {
         }
     }
 
-    /** Exporte tous les benchmarks contenus dans cette instance */
-    public void export() {
-        for (PerformanceBenchmark bench : this.benchmarks)
-            bench.export();
+    /** Exporte tous les benchmarks contenus dans cette instance
+     *
+     * @param name Tableau contenant le nom de tous les benchmarks, dans l'ordre
+     */
+    public void export(String[] name) {
+        if (name.length != this.benchmarks.length)
+            throw new IllegalArgumentException("Pas assez/trop de noms pour les benchmarks.");
+
+        for (int i=0; i < this.benchmarks.length; i++) {
+            PerformanceBenchmark bench = this.benchmarks[i];
+            bench.export(name[i]);
+        }
     }
 }
