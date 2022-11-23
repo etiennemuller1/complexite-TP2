@@ -6,7 +6,7 @@ import java.util.function.IntToLongFunction;
 
 public class Performance {
 
-    private final static int NANOSECONDS_TO_SECONDS = 1_000_000_000;
+    final static int NANOSECONDS_TO_SECONDS = 1_000_000_000;
 
     /** Calcule les performances d'un algorithme
      *
@@ -39,7 +39,7 @@ public class Performance {
      * @param array Le tableau
      * @return La moyenne de toutes les valeurs contenues dans array
      */
-    private static Double getMean(Double[] array) {
+    static Double getMean(Double[] array) {
         Double total = 0.0;
         for (Double d: array) {
             total += d;
