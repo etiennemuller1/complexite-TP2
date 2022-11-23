@@ -10,9 +10,10 @@ public class Main {
         /*Verificateur verificateur = new Verificateur("/amuhome/m16014784/Bureau/Reduction/SudokuSat.txt",
                 "/amuhome/m16014784/Bureau/Reduction/src/Affectation.txt");
         System.out.println(verificateur.verifier());*/
-        Sudoku sudoku = new Sudoku("src/sudoku.txt");
-        sudoku.toSAT();
-        System.out.println(sudoku.isSolutionGood("src/SudokuSolved.txt"));
+        //Sudoku sudoku = Sudoku.createSudokuFromFile("src/sudoku.txt");
+        Sudoku randomSudoku = Sudoku.createRandomSudoku(4,25);
+        randomSudoku.toSAT("RandomSudokuCNF.txt");
+        //System.out.println(sudoku.isSolutionGood("src/SudokuSolved.txt"));
         //performanceVerif();
     }
 

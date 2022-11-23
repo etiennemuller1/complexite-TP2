@@ -2,57 +2,86 @@ package main;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class Sudoku {
 
     int[][][] numeroVariables;
     HashMap<Integer, int[]> variableNumero = new HashMap<>();
-    boolean[][][] variables;
     int[][] grille;
     int taille;
     int tailleCarre;
 
-    public Sudoku(String sudokuFileName) throws FileNotFoundException {
+    /**Créer un sudoku à partir d'un fichier
+     * @param sudokuFileName chemin du fichier à partir duquel il faut créer le sudoku
+     * @return le sudoku souhaité
+     * **/
+    public static Sudoku createSudokuFromFile(String sudokuFileName) throws FileNotFoundException {
 
         File f = new File(sudokuFileName);
         Scanner scanner = new Scanner(f);
-        taille = scanner.nextInt();
+        int taille = scanner.nextInt();
+        Sudoku sudoku = new Sudoku(taille);
+
+        for (int i = 0; i < sudoku.tailleCarre; i++) {
+            for (int j = 0; j < sudoku.tailleCarre; j++) {
+                int value = scanner.nextInt();
+                sudoku.setGrilleValue(i,j,value);
+            }
+        }
+        sudoku.print(sudoku.grille);
+        return sudoku;
+    }
+
+    /** Créer un Sudoku aléatoire pas forcément solvable
+     * @param taille La taille du sudoku souhaité
+     * @param densité la densité de chiffre a placé dans le sudoku en pourcentage
+     * @return le sudoku souhaité
+     * **/
+    public static Sudoku createRandomSudoku(int taille, int densité)
+    {
+        Sudoku sudoku = new Sudoku(taille);
+        Random random = new Random();
+
+        for (int i = 0; i < sudoku.tailleCarre; i++) {
+            for (int j = 0; j < sudoku.tailleCarre; j++) {
+                int r = random.nextInt(0,100);
+                if(r<densité)
+                {
+                    int value = random.nextInt(9);
+                    sudoku.setGrilleValue(i,j,value);
+                }
+            }
+        }
+        sudoku.print(sudoku.grille);
+        return sudoku;
+    }
+
+    /** Créer un sudoku et l'affiche
+     * @param taille La taille du sudoku souhaité
+     * **/
+    public Sudoku(int taille)
+    {
+        this.taille = taille;
         tailleCarre = taille * taille;
-
         grille = new int[tailleCarre][tailleCarre];
-        variables = new boolean[tailleCarre][tailleCarre][tailleCarre];
         numeroVariables = new int[tailleCarre][tailleCarre][tailleCarre];
-
 
         int numeroVariable = 1;
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 for (int k = 0; k < tailleCarre; k++) {
-                    variables[i][j][k] = false;
                     variableNumero.put(numeroVariable, new int[]{i, j, k});
                     numeroVariables[i][j][k] = numeroVariable++;
-
-                }
-            }
-        }
-
-
-        for (int i = 0; i < tailleCarre; i++) {
-            for (int j = 0; j < tailleCarre; j++) {
-                int value = scanner.nextInt();
-                grille[i][j] = value;
-                if (value != -0) {
-                    variables[i][j][value - 1] = true;
                 }
             }
         }
     }
 
-    public void print() {
+    /**Affiche le sudoku
+     * @param grille grille du sudoku
+     * **/
+    public void print(int[][] grille) {
         System.out.println(taille);
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
@@ -62,12 +91,24 @@ public class Sudoku {
         }
     }
 
+    /**
+     * @param i position i de la valeur
+     * @param j position j de la valeur
+     * @param value valeur à affecter
+     * **/
+    public void setGrilleValue(int i,int j, int value)
+    {
+        grille[j][i]=value;
+    }
 
-    public void toSAT() throws IOException {
+    /**créer un fichier SudokuCNF.txt dans le dossier src
+     * @param fileName nom du fichier SAT à créer
+     * **/
+    public void toSAT(String fileName) throws IOException {
 
         Formule cnf = new Formule();
 
-        //on crée une clause pour chaque valeur deja connue
+        /**on crée une clause pour chaque valeur deja connue**/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 if (grille[i][j] != 0) {
@@ -78,7 +119,7 @@ public class Sudoku {
             }
         }
 
-        //chaque case doit avoir au moins une valeur
+        /**chaque case doit avoir au moins une valeur**/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 Clause clause = new Clause();
@@ -89,7 +130,7 @@ public class Sudoku {
             }
         }
 
-        //chaque case ne peut pas avoir plus d'une valeur
+        /**chaque case ne peut pas avoir plus d'une valeur**/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -104,7 +145,7 @@ public class Sudoku {
         }
 
 
-        //chaque colonne ne peut pas avoir une même valeur sur plus d'une case
+        /**chaque colonne ne peut pas avoir une même valeur sur plus d'une case**/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -117,7 +158,7 @@ public class Sudoku {
                 }
             }
         }
-        //chaque ligne ne peut pas avoir une même valeur sur plus d'une case
+        /**chaque ligne ne peut pas avoir une même valeur sur plus d'une case**/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -131,7 +172,7 @@ public class Sudoku {
             }
         }
 
-        //chaque zone ne peut pas avoir une même valeur sur plus d'une case
+        /**chaque zone ne peut pas avoir une même valeur sur plus d'une case**/
         for (int z = 0; z < taille; z++) {
             for (int w = 0; w < taille; w++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -152,9 +193,12 @@ public class Sudoku {
                 }
             }
         }
-        cnf.createCNFFile("SudokuCNF.txt", numeroVariables[tailleCarre - 1][tailleCarre - 1][tailleCarre - 1]);
+        cnf.createCNFFile(fileName, numeroVariables[tailleCarre - 1][tailleCarre - 1][tailleCarre - 1]);
     }
 
+    /**
+     * @param solvedSudokuFileName chemin du fichier a vérifié
+     * @return true si le sudoku est bien solution du sudoku initial et qu'il respecte bel et bien les règles du sudoku**/
     public boolean isSolutionGood(String solvedSudokuFileName) throws FileNotFoundException {
 
         File f = new File(solvedSudokuFileName);
@@ -175,26 +219,20 @@ public class Sudoku {
             }
         }
 
-        for (int i = 0; i < tailleCarre; i++) {
-            for (int j = 0; j < tailleCarre; j++) {
-                System.out.print(solvedGrid[i][j] + " ");
-            }
-            System.out.println();
-        }
+        print(solvedGrid);
 
-        //On vérifie si la solution est bien celle du sudoku demandé
+        /**On vérifie si la solution est bien celle du sudoku demandé**/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 if (grille[i][j] != 0) {
                     if (solvedGrid[i][j] != grille[i][j]) {
-                        System.out.println(i + " " + j + " " + solvedGrid[i][j] + " " + grille[i][j]);
                         return false;
                     }
                 }
             }
         }
 
-        //On vérifie s'il n'y a pas 2 fois la meme valeur sur chaque ligne
+        /**On vérifie s'il n'y a pas 2 fois la meme valeur dans chaque ligne**/
         for (int i = 0; i < tailleCarre; i++) {
             ArrayList<Integer> values = new ArrayList<>();
             for (int j = 0; j < tailleCarre; j++) {
@@ -206,7 +244,7 @@ public class Sudoku {
             }
         }
 
-        //On vérifie s'il n'y a pas 2 fois la meme valeur sur chaque colonne
+        /**On vérifie s'il n'y a pas 2 fois la meme valeur dans chaque colonne**/
         for (int j = 0; j < tailleCarre; j++) {
             ArrayList<Integer> values = new ArrayList<>();
             for (int i = 0; i < tailleCarre; i++) {
@@ -218,7 +256,7 @@ public class Sudoku {
             }
         }
 
-        //On vérifie s'il n'y a pas 2 fois la meme valeur dans chaque zone
+        /**On vérifie s'il n'y a pas 2 fois la meme valeur dans chaque zone**/
         for (int z = 0; z < taille; z++) {
             for (int w = 0; w < taille; w++) {
                 ArrayList<Integer> values = new ArrayList<>();
@@ -233,6 +271,7 @@ public class Sudoku {
                 }
             }
         }
+
         return true;
     }
 }
