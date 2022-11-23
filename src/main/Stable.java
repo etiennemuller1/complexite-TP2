@@ -123,7 +123,7 @@ public class Stable {
      * @param variableVoisin Son voisin
      */
     private void addNeighbourConstraint(int variableSommet, int variableVoisin) {
-        ArrayList<Integer> constraint = new ArrayList<>(2);
+        Clause constraint = new Clause();
         constraint.add(-variableSommet);
         constraint.add(-variableVoisin);
 

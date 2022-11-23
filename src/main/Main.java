@@ -10,9 +10,10 @@ public class Main {
         /*Verificateur verificateur = new Verificateur("/amuhome/m16014784/Bureau/Reduction/SudokuSat.txt",
                 "/amuhome/m16014784/Bureau/Reduction/src/Affectation.txt");
         System.out.println(verificateur.verifier());*/
-        //Sudoku sudoku = new Sudoku("/amuhome/m16014784/Bureau/Reduction/src/sudoku.txt");
+        Sudoku sudoku = new Sudoku("src/sudoku.txt");
         //sudoku.toSAT();
-        performanceVerif();
+        System.out.println(sudoku.isSolutionGood("src/SudokuSolved.txt"));
+        //performanceVerif();
     }
 
     public static void performanceVerif() {

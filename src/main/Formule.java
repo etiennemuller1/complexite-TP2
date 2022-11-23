@@ -1,16 +1,18 @@
 package main;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
-/** Représente une formule de type SAT, composée de clauses */
+/**
+ * Représente une formule de type SAT, composée de clauses
+ */
 public class Formule implements Iterable<ArrayList<Integer>> {
-    ArrayList<ArrayList<Integer>> clauses;
+    ArrayList<Clause> clauses;
 
-    /** Construit une nouvelle Formule
+    /**
+     * Construit une nouvelle Formule
      *
      * @param size Le nombre de clauses que l'on compte mettre dans cette instance
      *             Cette valeur peut être inexacte
@@ -19,7 +21,9 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         this.clauses = new ArrayList<>(size);
     }
 
-    /** Construit une nouvelle formule */
+    /**
+     * Construit une nouvelle formule
+     */
     public Formule() {
         this.clauses = new ArrayList<>();
     }
@@ -34,16 +38,22 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         return clauses.toString();
     }
 
-    /** Rajoute une clause dans la formule
+    public int size() {
+        return clauses.size();
+    }
+
+    /**
+     * Rajoute une clause dans la formule
      *
      * @param clause La clause, sous forme de liste de littéraux la composant
      *               On suppose qu'elle est bien formulé (e.g. il n'y a pas de littéral 0)
      */
-    public void addClause(ArrayList<Integer> clause) {
+    public void addClause(Clause clause) {
         clauses.add(clause);
     }
 
-    /** Retourne le nombre de clauses présentes dans la formule au moment de l'appel
+    /**
+     * Retourne le nombre de clauses présentes dans la formule au moment de l'appel
      *
      * @return Le nombre de clauses
      */
@@ -51,7 +61,8 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         return clauses.size();
     }
 
-    /** Lit un fichier sous forme DIMACS CNF et construit une instance
+    /**
+     * Lit un fichier sous forme DIMACS CNF et construit une instance
      *
      * @param path Le chemin vers le fichier DIMACS CNF
      * @return L'instance construite
@@ -72,7 +83,7 @@ public class Formule implements Iterable<ArrayList<Integer>> {
 
         /* On récupère maintenant les clauses */
         for (int i = 0; i < nbClauses; i++) {
-            ArrayList<Integer> clause = new ArrayList<>();
+            Clause clause = new Clause();
             formule.clauses.add(clause);
 
             int literal = scan.nextInt();
@@ -84,7 +95,8 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         return formule;
     }
 
-    /** Génère une formule tautologique
+    /**
+     * Génère une formule tautologique
      * La "taille" de celle-ci est équivalente à 2*nbOfVariables,
      * étant donné que ceux-ci n'apparaissent que 2 fois dans la formule
      * (1 littéral positif et 1 littéral négatif)
@@ -101,7 +113,7 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         Formule formule = new Formule(nbOfClauses);
         for (int clauseNb = 1; clauseNb <= nbOfClauses; clauseNb++) {
             int literal = clauseNb;
-            ArrayList<Integer> clause = new ArrayList<>(2);
+            Clause clause = new Clause();
             clause.add(literal);
             clause.add(-literal);
 
@@ -111,7 +123,8 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         return formule;
     }
 
-    /** Génère une formule impossible à satisfaire
+    /**
+     * Génère une formule impossible à satisfaire
      * (je ne suis pas certain que l'on appelle ce type de formule une
      * contradiction, à vérifier)
      * La taille est équivalente au nombre de littéraux, donc ici 2*nbOfVariables
@@ -132,12 +145,12 @@ public class Formule implements Iterable<ArrayList<Integer>> {
             int literal = variable;
 
             /* Clause contenant le littéral positif */
-            ArrayList<Integer> clausePositive = new ArrayList<>(1);
+            Clause clausePositive = new Clause();
             clausePositive.add(literal);
             formule.addClause(clausePositive);
 
             /* Clause contenant le littéral négatif */
-            ArrayList<Integer> clauseNegative = new ArrayList<>(1);
+            Clause clauseNegative = new Clause();
             clauseNegative.add(-literal);
             formule.addClause(clauseNegative);
         }
@@ -145,8 +158,9 @@ public class Formule implements Iterable<ArrayList<Integer>> {
         return formule;
     }
 
-    /** Vérifie si cette formule est satisfaite par l'affectation donnée en paramètre
-     *  Correspond à la première partie du TP
+    /**
+     * Vérifie si cette formule est satisfaite par l'affectation donnée en paramètre
+     * Correspond à la première partie du TP
      *
      * @param affectations Les affectations à tester
      * @return true si affectations satisfait la formule, false sinon
@@ -161,5 +175,23 @@ public class Formule implements Iterable<ArrayList<Integer>> {
             return false;
         }
         return true;
+    }
+
+    public void createCNFFile(String nameFile, int numberOfVariable) throws IOException {
+        File file = new File(nameFile);
+        if (file.exists()) {
+            file.delete();
+        }
+        file.createNewFile();
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.write("p cnf " + " " + numberOfVariable + " " + this.size());
+
+        for (Clause clause : clauses) {
+            bw.newLine();
+            bw.write(clause.createCNFLine());
+        }
+        bw.close();
     }
 }
