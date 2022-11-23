@@ -11,7 +11,7 @@ public class Main {
                 "/amuhome/m16014784/Bureau/Reduction/src/Affectation.txt");
         System.out.println(verificateur.verifier());*/
         Sudoku sudoku = new Sudoku("src/sudoku.txt");
-        //sudoku.toSAT();
+        sudoku.toSAT();
         System.out.println(sudoku.isSolutionGood("src/SudokuSolved.txt"));
         //performanceVerif();
     }

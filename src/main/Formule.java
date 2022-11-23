@@ -178,7 +178,7 @@ public class Formule implements Iterable<ArrayList<Integer>> {
     }
 
     public void createCNFFile(String nameFile, int numberOfVariable) throws IOException {
-        File file = new File(nameFile);
+        File file = new File("src/"+nameFile);
         if (file.exists()) {
             file.delete();
         }
