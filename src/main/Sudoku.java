@@ -13,7 +13,7 @@ public class Sudoku {
     int tailleCarre;
 
     /**Créer un sudoku à partir d'un fichier
-     * @param sudokuFileName chemin du fichier à partir duquel il faut créer le sudoku
+     * @param sudokuFileName chemin du fichier txt à partir duquel il faut créer le sudoku
      * @return le sudoku souhaité
      * **/
     public static Sudoku createSudokuFromFile(String sudokuFileName) throws FileNotFoundException {
@@ -35,7 +35,7 @@ public class Sudoku {
 
     /** Créer un Sudoku aléatoire pas forcément solvable
      * @param taille La taille du sudoku souhaité
-     * @param densité la densité de chiffre a placé dans le sudoku en pourcentage
+     * @param densité la densité de chiffre à placer dans le sudoku en pourcentage
      * @return le sudoku souhaité
      * **/
     public static Sudoku createRandomSudoku(int taille, int densité)
@@ -108,18 +108,11 @@ public class Sudoku {
 
         Formule cnf = new Formule();
 
-        /**on crée une clause pour chaque valeur deja connue**/
-        for (int i = 0; i < tailleCarre; i++) {
-            for (int j = 0; j < tailleCarre; j++) {
-                if (grille[i][j] != 0) {
-                    Clause clause = new Clause();
-                    clause.add(numeroVariables[i][j][grille[i][j] - 1]);
-                    cnf.addClause(clause);
-                }
-            }
-        }
 
-        /**chaque case doit avoir au moins une valeur**/
+
+        /**(1)chaque case doit avoir au moins une valeur
+         * Theta(n^6)
+         * **/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 Clause clause = new Clause();
@@ -130,7 +123,9 @@ public class Sudoku {
             }
         }
 
-        /**chaque case ne peut pas avoir plus d'une valeur**/
+        /**(2)chaque case ne peut pas avoir plus d'une valeur
+         * Theta(n^8)
+         * **/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -145,7 +140,9 @@ public class Sudoku {
         }
 
 
-        /**chaque colonne ne peut pas avoir une même valeur sur plus d'une case**/
+        /**(3)chaque colonne ne peut pas avoir une même valeur sur plus d'une case
+         * Theta(n^8)
+         * **/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -158,7 +155,9 @@ public class Sudoku {
                 }
             }
         }
-        /**chaque ligne ne peut pas avoir une même valeur sur plus d'une case**/
+        /**(4)chaque ligne ne peut pas avoir une même valeur sur plus d'une case
+         * Theta(n^8)
+         * **/
         for (int i = 0; i < tailleCarre; i++) {
             for (int j = 0; j < tailleCarre; j++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -172,7 +171,9 @@ public class Sudoku {
             }
         }
 
-        /**chaque zone ne peut pas avoir une même valeur sur plus d'une case**/
+        /**(5)chaque zone ne peut pas avoir une même valeur sur plus d'une case
+         * Theta(n^8)
+         * **/
         for (int z = 0; z < taille; z++) {
             for (int w = 0; w < taille; w++) {
                 for (int k = 0; k < tailleCarre; k++) {
@@ -193,6 +194,20 @@ public class Sudoku {
                 }
             }
         }
+
+        /**(6)on affecte les valeurs deja connue
+         * Theta(n^4)
+         * **/
+        for (int i = 0; i < tailleCarre; i++) {
+            for (int j = 0; j < tailleCarre; j++) {
+                if (grille[i][j] != 0) {
+                    Clause clause = new Clause();
+                    clause.add(numeroVariables[i][j][grille[i][j] - 1]);
+                    cnf.addClause(clause);
+                }
+            }
+        }
+
         cnf.createCNFFile(fileName, numeroVariables[tailleCarre - 1][tailleCarre - 1][tailleCarre - 1]);
     }
 
