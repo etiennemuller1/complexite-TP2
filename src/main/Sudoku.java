@@ -101,10 +101,9 @@ public class Sudoku {
         grille[j][i]=value;
     }
 
-    /**créer un fichier SudokuCNF.txt dans le dossier src
-     * @param fileName nom du fichier SAT à créer
+    /** Procède à la réduction de cette instance
      * **/
-    public void toSAT(String fileName) throws IOException {
+    public Formule toSAT() {
 
         Formule cnf = new Formule();
 
@@ -208,7 +207,20 @@ public class Sudoku {
             }
         }
 
-        cnf.createCNFFile(fileName, numeroVariables[tailleCarre - 1][tailleCarre - 1][tailleCarre - 1]);
+        return cnf;
+    }
+
+    /** Exporte la réduction
+     *
+     * @param filename Le nom du fichier
+     */
+    public void exportSAT(String filename) {
+        Formule formule = this.toSAT();
+        try {
+            formule.createCNFFile(filename, numeroVariables[tailleCarre - 1][tailleCarre - 1][tailleCarre - 1]);
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'exportation de la formule.");
+        }
     }
 
     /**
