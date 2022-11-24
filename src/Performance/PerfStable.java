@@ -7,7 +7,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.IntToLongFunction;
 
 import static Performance.Performance.NANOSECONDS_TO_SECONDS;
 import static Performance.Performance.getMean;
@@ -21,7 +20,7 @@ public class PerfStable {
      * @param nbOfMeasures Le nombre de mesures effectuées par taille
      * @return
      */
-    public static Double[][] getGraphPerformance(int upTo, int nbOfMeasures) {
+    public static Double[][] getStablePerformance(int upTo, int nbOfMeasures) {
         upTo++; /* Afin d'inclure upTo dans les calculs */
         Double[][] performance = new Double[3][upTo];
 
@@ -40,16 +39,20 @@ public class PerfStable {
 
                 measures[1][measure] = (double) bruteForcePerf.apply(formule) / NANOSECONDS_TO_SECONDS;
                 measures[2][measure] = (double) solverPerf.apply(formule) / NANOSECONDS_TO_SECONDS;
-
-
             }
             performance[0][size] = getMean(measures[0]);
             performance[1][size] = getMean(measures[1]);
             performance[2][size] = getMean(measures[2]);
-
         }
 
         return performance;
+    }
+
+    public static void exportStablePerformance(int upTo, int nbOfMeasures) {
+        Double[][] performance = PerfStable.getStablePerformance(upTo, nbOfMeasures);
+        Performance.exportFile(performance[0], "StableReduct" + upTo + "_" + nbOfMeasures + ".txt");
+        Performance.exportFile(performance[1], "StableBruteForce" + upTo + "_" + nbOfMeasures + ".txt");
+        Performance.exportFile(performance[2], "StableSolver" + upTo + "_" + nbOfMeasures + ".txt");
     }
 
     /** Teste la performance de la réduction, et retourne également la formule générée
@@ -100,20 +103,4 @@ public class PerfStable {
 
         return before.until(after, ChronoUnit.NANOS);
     };
-
-    public static Double[] getStablePerf(int upTo, int nbOfMeasures) {
-        IntToLongFunction func = (size) -> {
-            Instant before, after;
-            Stable.Graph graph = Stable.Graph.generateRandomGraph(size, PERF_GRAPH_DENSITY);
-            Stable stable = new Stable(graph);
-
-            before = Instant.now();
-            stable.computeAndGetFormula();
-            after = Instant.now();
-
-            return before.until(after, ChronoUnit.NANOS);
-        };
-
-        return Performance.getPerformance(upTo, nbOfMeasures, func);
-    }
 }
