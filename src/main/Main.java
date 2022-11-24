@@ -24,4 +24,11 @@ public class Main {
         PerfVerif.exportVerifTautologyPerf(upTo, nbOfMeasures);
         PerfVerif.exportVerifContradictionPerf(upTo, nbOfMeasures);
     }
+
+    public static void performanceStable() {
+        int nbOfMeasures = 20;
+        int upTo = 200;
+
+        PerfStable.exportStablePerformance(upTo, nbOfMeasures);
+    }
 }
