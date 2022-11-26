@@ -179,21 +179,26 @@ public class Formule implements Iterable<Clause> {
         return true;
     }
 
-    public void createCNFFile(String nameFile) throws IOException {
+    public void createCNFFile(String nameFile) {
         File file = new File("src/"+nameFile);
         if (file.exists()) {
             file.delete();
         }
-        file.createNewFile();
-        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-        BufferedWriter bw = new BufferedWriter(fw);
 
-        bw.write("p cnf " + " " + nbOfVariables + " " + this.size());
+        try {
+            file.createNewFile();
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
 
-        for (Clause clause : clauses) {
-            bw.newLine();
-            bw.write(clause.createCNFLine());
+            bw.write("p cnf " + " " + nbOfVariables + " " + this.size());
+
+            for (Clause clause : clauses) {
+                bw.newLine();
+                bw.write(clause.createCNFLine());
+            }
+            bw.close();
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'écriture du fichier formule.");
         }
-        bw.close();
     }
 }
