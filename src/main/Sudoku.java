@@ -214,11 +214,7 @@ public class Sudoku {
      */
     public void exportSAT(String filename) {
         Formule formule = this.toSAT();
-        try {
-            formule.createCNFFile(filename);
-        } catch (IOException e) {
-            System.out.println("Erreur lors de l'exportation de la formule.");
-        }
+        formule.createCNFFile(filename);
     }
 
     /**
