@@ -4,6 +4,7 @@ import main.Formule;
 import main.Stable;
 import main.Sudoku;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.function.BiFunction;
@@ -11,6 +12,7 @@ import java.util.function.Function;
 
 import static Performance.Performance.NANOSECONDS_TO_SECONDS;
 import static Performance.Performance.getMean;
+import static main.Main.KISSAT_EXEC_PATH;
 
 public class PerfSudoku {
 
@@ -22,12 +24,20 @@ public class PerfSudoku {
      */
     public static Double[][] getSudokuPerformance(int upTo, int nbOfMeasures) {
         final int NB_OF_ALGO = 2;
-        final int SUDOKU_DENSITY = 30;
+        final int SUDOKU_DENSITY = 5;
 
         upTo++; /* Afin d'inclure upTo dans les calculs */
         Double[][] performance = new Double[NB_OF_ALGO][upTo];
 
-        for (int size = 0; size < upTo; size++) {
+        /*FIXME: Les algos sudoku ne fonctionnent pas sur des sudoku de taille
+        *  inférieure à 3, ceci est donc un garde-fou temporaire pour ne pas crasher le programme */
+        for (int algo = 0; algo < NB_OF_ALGO; algo++) {
+            for (int i = 0; i < 3; i++) {
+                performance[algo][i] = 0.0;
+            }
+        }
+
+        for (int size = 3; size < upTo; size++) {
             Double[][] measures = new Double[NB_OF_ALGO][nbOfMeasures]; /* Les différentes mesures pour le même index */
 
             /* On procède à plusieurs mesures afin de lisser la courbe
@@ -75,9 +85,17 @@ public class PerfSudoku {
      */
     private static Function<Formule, Long> solverPerf = (formule) -> {
         Instant before, after;
+        ProcessBuilder kissatBuilder = new ProcessBuilder(KISSAT_EXEC_PATH, "tmp_formula.txt", "--relaxed");
+        kissatBuilder.inheritIO();
+
+        formule.createCNFFile("tmp_formula.txt");
 
         before = Instant.now();
-        /* TODO */
+        try {
+            Process kissat = kissatBuilder.start();
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'exéuction de kissat.");
+        }
         after = Instant.now();
 
         return before.until(after, ChronoUnit.NANOS);
