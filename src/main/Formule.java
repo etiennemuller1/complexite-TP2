@@ -9,22 +9,24 @@ import java.util.Scanner;
  * Représente une formule de type SAT, composée de clauses
  */
 public class Formule implements Iterable<Clause> {
-    ArrayList<Clause> clauses;
+    private ArrayList<Clause> clauses;
+    private int nbOfVariables;
 
     /**
      * Construit une nouvelle Formule
      *
-     * @param size Le nombre de clauses que l'on compte mettre dans cette instance
+     * @param nbOfClauses Le nombre de clauses que l'on compte mettre dans cette instance
      *             Cette valeur peut être inexacte
      */
-    public Formule(int size) {
-        this.clauses = new ArrayList<>(size);
+    public Formule(int nbOfVariables, int nbOfClauses) {
+        this.clauses = new ArrayList<>(nbOfClauses);
+        this.nbOfVariables = nbOfVariables;
     }
 
     /**
      * Construit une nouvelle formule
      */
-    public Formule() {
+    public Formule(int nbOfVariables) {
         this.clauses = new ArrayList<>();
     }
 
@@ -79,7 +81,7 @@ public class Formule implements Iterable<Clause> {
         scan.next(); /* On saute "cnf" */
         nbVariables = scan.nextInt();
         nbClauses = scan.nextInt();
-        formule = new Formule(nbClauses);
+        formule = new Formule(nbClauses, nbVariables);
 
         /* On récupère maintenant les clauses */
         for (int i = 0; i < nbClauses; i++) {
@@ -110,7 +112,7 @@ public class Formule implements Iterable<Clause> {
 
         int nbOfClauses = nbOfVariables;
 
-        Formule formule = new Formule(nbOfClauses);
+        Formule formule = new Formule(nbOfClauses, nbOfVariables);
         for (int clauseNb = 1; clauseNb <= nbOfClauses; clauseNb++) {
             int literal = clauseNb;
             Clause clause = new Clause();
@@ -140,7 +142,7 @@ public class Formule implements Iterable<Clause> {
         int nbOfLiterals = nbOfVariables * 2;
         int nbOfClauses = nbOfLiterals;
 
-        Formule formule = new Formule(nbOfClauses);
+        Formule formule = new Formule(nbOfClauses, nbOfVariables);
         for (int variable = 1; variable <= nbOfVariables; variable++) {
             int literal = variable;
 
@@ -177,7 +179,7 @@ public class Formule implements Iterable<Clause> {
         return true;
     }
 
-    public void createCNFFile(String nameFile, int numberOfVariable) throws IOException {
+    public void createCNFFile(String nameFile) throws IOException {
         File file = new File("src/"+nameFile);
         if (file.exists()) {
             file.delete();
@@ -186,7 +188,7 @@ public class Formule implements Iterable<Clause> {
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
 
-        bw.write("p cnf " + " " + numberOfVariable + " " + this.size());
+        bw.write("p cnf " + " " + nbOfVariables + " " + this.size());
 
         for (Clause clause : clauses) {
             bw.newLine();

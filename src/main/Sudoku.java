@@ -105,9 +105,7 @@ public class Sudoku {
      * **/
     public Formule toSAT() {
 
-        Formule cnf = new Formule();
-
-
+        Formule cnf = new Formule(numeroVariables[tailleCarre - 1][tailleCarre - 1][tailleCarre - 1]);
 
         /**(1)chaque case doit avoir au moins une valeur
          * Theta(n^6)
@@ -217,7 +215,7 @@ public class Sudoku {
     public void exportSAT(String filename) {
         Formule formule = this.toSAT();
         try {
-            formule.createCNFFile(filename, numeroVariables[tailleCarre - 1][tailleCarre - 1][tailleCarre - 1]);
+            formule.createCNFFile(filename);
         } catch (IOException e) {
             System.out.println("Erreur lors de l'exportation de la formule.");
         }

@@ -96,7 +96,7 @@ public class Stable {
      * @return La formule générée
      */
     public Formule computeAndGetFormula() {
-        clauses = new Formule();
+        //clauses = new Formule();
         
         addAllNeighboursConstraints();
         /*TODO: Rajouter les nouvelles contraintes */
