@@ -84,7 +84,7 @@ public class PerfSudoku {
     };
 
     public static void exportSudokuPerformance(int upTo, int nbOfMeasures) {
-        Double[][] performance = PerfStable.getStablePerformance(upTo, nbOfMeasures);
+        Double[][] performance = PerfSudoku.getSudokuPerformance(upTo, nbOfMeasures);
         Performance.exportFile(performance[0], "SudokuReduct" + upTo + "_" + nbOfMeasures + ".txt");
         Performance.exportFile(performance[1], "SudokuSolver" + upTo + "_" + nbOfMeasures + ".txt");
     }

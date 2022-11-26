@@ -6,15 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        /*Verificateur verificateur = new Verificateur("/amuhome/m16014784/Bureau/Reduction/SudokuSat.txt",
+
+    final static public String KISSAT_EXEC_PATH = "/amuhome/p19020624/Téléchargements/kissat-1.0.3-79d8d8f2/build/kissat";
+    public static void main(String[] args) throws FileNotFoundException {
+        /*Verificateur verificateur = new Verificateur("/amuhome/m16014784/Bureau/Reduction/src/DIMACSCNF.txt",
                 "/amuhome/m16014784/Bureau/Reduction/src/Affectation.txt");
+        System.out.println(verificateur.clauses);
+        System.out.println(verificateur.affectations);
         System.out.println(verificateur.verifier());*/
-        //Sudoku sudoku = Sudoku.createSudokuFromFile("src/sudoku.txt");
-        Sudoku randomSudoku = Sudoku.createRandomSudoku(4,25);
-        randomSudoku.toSAT("RandomSudokuCNF.txt");
-        //System.out.println(sudoku.isSolutionGood("src/SudokuSolved.txt"));
+        //Sudoku sudoku = new Sudoku("/amuhome/m16014784/Bureau/Reduction/src/sudoku.txt");
+        //sudoku.toSAT();
         //performanceVerif();
+        performanceSudoku();
     }
 
     public static void performanceVerif() {
@@ -34,7 +37,7 @@ public class Main {
 
     public static void performanceSudoku() {
         int nbOfMeasures = 20;
-        int upTo = 200;
+        int upTo = 30;
 
         PerfSudoku.exportSudokuPerformance(upTo, nbOfMeasures);
     }
