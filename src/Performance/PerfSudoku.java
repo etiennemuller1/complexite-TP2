@@ -83,7 +83,7 @@ public class PerfSudoku {
         return before.until(after, ChronoUnit.NANOS);
     };
 
-    public static void exportStablePerformance(int upTo, int nbOfMeasures) {
+    public static void exportSudokuPerformance(int upTo, int nbOfMeasures) {
         Double[][] performance = PerfStable.getStablePerformance(upTo, nbOfMeasures);
         Performance.exportFile(performance[0], "SudokuReduct" + upTo + "_" + nbOfMeasures + ".txt");
         Performance.exportFile(performance[1], "SudokuSolver" + upTo + "_" + nbOfMeasures + ".txt");
