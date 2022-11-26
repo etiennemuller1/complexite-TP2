@@ -180,7 +180,7 @@ public class Formule implements Iterable<Clause> {
     }
 
     public void createCNFFile(String nameFile) {
-        File file = new File("src/"+nameFile);
+        File file = new File(nameFile);
         if (file.exists()) {
             file.delete();
         }
