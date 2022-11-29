@@ -172,6 +172,35 @@ public class Stable {
         }
     }
 
+    private void addConstraint_Neighbours() {
+        /* On itère sur tous les sommets */
+        for (int i1 = 0; i1 < this.graph.size; i1++) {
+            
+            /* On itère sur toutes les positions possibles de i1 dans la zone vide */
+            i1position:
+            for (int j1 = 0; j1 < stableSize; j1++) {
+
+                /* On va chercher les voisins de i1 */
+                for (int i2 = 0; i2 < this.graph.size; i2++) { /*TODO: Peut-être peut on partir de i1 ? */
+                    /* Si i1 et i2 ne sont pas voisins, on ne continue pas avec cet i2 */
+                    if (this.graph.matrix[i1][i2] == 0)
+                        continue i1position;
+                    /* Ici, i2 est un voisin de i1 */
+
+                    /* Pour chaque position possible de i2 dans la zone vide */
+                    for (int j2 = 0; j2 < stableSize; j2++) {
+                        Clause clause = new Clause(2);
+                        clause.add(-this.toVariableNb(i1,j1));
+                        clause.add(-this.toVariableNb(i2,j2));
+                        /* Représente tout aussi bien v_(i1,j1) => ¬v_(i2,j2) que v_(i2,j2) => ¬v_(i1,j1) */
+
+                        clauses.addClause(clause);
+                    }
+                }
+            }
+        }
+    }
+
     /** Rajoute toutes les contraintes de voisinage du graphe */
     private void addAllNeighboursConstraints() {
         for (int vertex = 0; vertex < graph.size; vertex++) {
