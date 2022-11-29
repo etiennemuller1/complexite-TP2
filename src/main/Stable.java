@@ -114,6 +114,33 @@ public class Stable {
         }
     }
     /*TODO: Probablement à modifier avec les nouvelles variables */
+
+    /** À partir d'une description de la variable de type v_{i,j} comme
+     * utilisée dans le rapport, qui représente la variable en interne.
+     * Attention tout de même, à la différence du rapport, on indice ici
+     * à partir de 0 et pas de 1.
+     *
+     * @param vertex Le sommet représenté par la variable, nombre positif
+     *               potentiellement nul.
+     * @param stableIndice L'emplacement dans la zone vide représenté
+     *                     par la variable, à partir de 0.
+     * @return Le numéro de variable utilisé en interne dans la formule,
+     *         nombre positif non-nul.
+     */
+    private int toVariableNb(int vertex, int stableIndice) {
+        return vertex * size + stableIndice + 1;
+    }
+    /* EXEMPLE: Pour 5 sommets et une zone vide de taille 4, on a :
+     *
+     *                  emplacement dans la zone vide
+     *                  0       1       2       3
+     *                +-------------------------------
+     *  n° sommet   0 | 1       2       3       4
+     *              1 | 5       6       7       8
+     *              2 | 9       10      11      12
+     *              3 | 13      14      15      16
+     *              4 | 17      18      19      20
+     */
     
     /** Rajoute une contrainte de voisinage pour le sommet et son voisin donnés
      *  (si on prend le sommet, alors on ne prend pas son voisin)
