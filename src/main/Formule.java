@@ -28,6 +28,7 @@ public class Formule implements Iterable<Clause> {
      */
     public Formule(int nbOfVariables) {
         this.clauses = new ArrayList<>();
+        this.nbOfVariables = nbOfVariables;
     }
 
     @Override
