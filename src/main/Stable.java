@@ -2,7 +2,6 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -86,7 +85,7 @@ public class Stable {
     private Graph graph;
 
     /** La taille de la zone vide que l'on cherche */
-    private int size;
+    private int stableSize;
 
     /** Construit une nouvelle instance Stable à partir d'un graphe
      *
@@ -107,6 +106,45 @@ public class Stable {
         /*TODO: Rajouter les nouvelles contraintes */
 
         return clauses;
+    }
+
+    /** Rajoute les contraintes indiquant qu'il est nécessaire d'avoir
+     * au moins un sommet par emplacement de zone vide.
+     * Avec la visualisation par matrices disponible sur le rapport,
+     * cette contrainte correspond à avoir au moins une variable vraie par colonne.
+     */
+    private void addConstraint_AtLeastStable() {
+        /* Pour chaque emplacement de zone vide (et donc chaque colonne)… */
+        for (int j = 0; j < stableSize; j++) {
+            Clause clause = new Clause(this.graph.size);
+
+            /* …on rajoute tous les sommets */
+            for (int vertex = 0; vertex < this.graph.size; vertex++) {
+                clause.add(this.toVariableNb(vertex, j));
+            }
+            clauses.addClause(clause);
+        }
+    }
+
+    /** Rajoute les contraintes indiquant qu'il est nécessaire d'avoir
+     * au plus un sommet par emplacement de zone vide.
+     * Avec la visualisation par matrices disponible sur le rapport,
+     * cette contrainte correspond à avoir au plus une variable vraie par colonne.
+     */
+    private void addConstraint_UpToStable() {
+        /* Pour chaque emplacement de zone vide (et donc chaque colonne)… */
+        for (int j = 0; j < stableSize; j++) {
+
+            /* On cherche à avoir toutes les paires {i1,i2} possibles */
+            for (int i1 = 0; i1 < this.graph.size; i1++) {
+                for (int i2 = 0; i2 < this.graph.size; i2++) {
+                    Clause clause = new Clause(2);
+                    clause.add(-this.toVariableNb(i1,j));
+                    clause.add(-this.toVariableNb(i2,j));
+                    /* Représente aussi bien v_(i1,j) => ¬v_(i2,j) que v_(i2,j) => ¬v_(i1,j) */
+                }
+            }
+        }
     }
 
     /** Rajoute toutes les contraintes de voisinage du graphe */
@@ -133,7 +171,7 @@ public class Stable {
      *         nombre positif non-nul.
      */
     private int toVariableNb(int vertex, int stableIndice) {
-        return vertex * size + stableIndice + 1;
+        return vertex * stableSize + stableIndice + 1;
     }
     /* EXEMPLE: Pour 5 sommets et une zone vide de taille 4, on a :
      *
