@@ -142,6 +142,8 @@ public class Stable {
                     clause.add(-this.toVariableNb(i1,j));
                     clause.add(-this.toVariableNb(i2,j));
                     /* Représente aussi bien v_(i1,j) => ¬v_(i2,j) que v_(i2,j) => ¬v_(i1,j) */
+
+                    clauses.addClause(clause);
                 }
             }
         }
