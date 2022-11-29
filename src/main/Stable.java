@@ -149,6 +149,29 @@ public class Stable {
         }
     }
 
+    /** Rajoute les contraintes indiquant qu'il est nécessaire d'avoir
+     * au plus un emplacement de zone vide par sommet.
+     * Avec la visualisation par matrices disponible sur le rapport,
+     * cette contrainte correspond à avoir au plus un variable vraie par ligne.
+     */
+    private void addConstraint_UpToVertex() {
+        /* On itère sur tous les sommets */
+        for (int vertex = 0; vertex < this.graph.size; vertex++) {
+
+            /* On cherche à avoir toutes les paires {j1,j2} possibles */
+            for (int j1 = 0; j1 < stableSize; j1++) {
+                for (int j2 = 0; j2 < stableSize; j2++) {
+                    Clause clause = new Clause(2);
+                    clause.add(-this.toVariableNb(vertex,j1));
+                    clause.add(-this.toVariableNb(vertex,j2));
+                    /* Représente aussi bien v_(i,j1) => ¬v_(i,j2) que v_(i,j2) => ¬v_(i,j1) */
+
+                    clauses.addClause(clause);
+                }
+            }
+        }
+    }
+
     /** Rajoute toutes les contraintes de voisinage du graphe */
     private void addAllNeighboursConstraints() {
         for (int vertex = 0; vertex < graph.size; vertex++) {
