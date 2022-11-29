@@ -156,14 +156,14 @@ public class Stable {
      */
     private void addConstraint_UpToVertex() {
         /* On itère sur tous les sommets */
-        for (int vertex = 0; vertex < this.graph.size; vertex++) {
+        for (int i = 0; i < this.graph.size; i++) {
 
             /* On cherche à avoir toutes les paires {j1,j2} possibles */
             for (int j1 = 0; j1 < stableSize; j1++) {
                 for (int j2 = 0; j2 < stableSize; j2++) {
                     Clause clause = new Clause(2);
-                    clause.add(-this.toVariableNb(vertex,j1));
-                    clause.add(-this.toVariableNb(vertex,j2));
+                    clause.add(-this.toVariableNb(i,j1));
+                    clause.add(-this.toVariableNb(i,j2));
                     /* Représente aussi bien v_(i,j1) => ¬v_(i,j2) que v_(i,j2) => ¬v_(i,j1) */
 
                     clauses.addClause(clause);
