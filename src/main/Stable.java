@@ -81,7 +81,12 @@ public class Stable {
     }
 
     private Formule clauses;
+
+    /** Le graphe sur lequel on cherche la zone vide */
     private Graph graph;
+
+    /** La taille de la zone vide que l'on cherche */
+    private int size;
 
     /** Construit une nouvelle instance Stable à partir d'un graphe
      *
