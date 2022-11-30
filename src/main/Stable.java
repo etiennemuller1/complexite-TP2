@@ -140,7 +140,7 @@ public class Stable {
 
             /* On cherche à avoir toutes les paires {i1,i2} possibles */
             for (int i1 = 0; i1 < this.graph.size; i1++) {
-                for (int i2 = 0; i2 < this.graph.size; i2++) {
+                for (int i2 = i1+1; i2 < this.graph.size; i2++) {
                     Clause clause = new Clause(2);
                     clause.add(-this.toVariableNb(i1,j));
                     clause.add(-this.toVariableNb(i2,j));
@@ -163,7 +163,7 @@ public class Stable {
 
             /* On cherche à avoir toutes les paires {j1,j2} possibles */
             for (int j1 = 0; j1 < stableSize; j1++) {
-                for (int j2 = 0; j2 < stableSize; j2++) {
+                for (int j2 = j1+1; j2 < stableSize; j2++) {
                     Clause clause = new Clause(2);
                     clause.add(-this.toVariableNb(i,j1));
                     clause.add(-this.toVariableNb(i,j2));
@@ -184,7 +184,7 @@ public class Stable {
             for (int j1 = 0; j1 < stableSize; j1++) {
 
                 /* On va chercher les voisins de i1 */
-                for (int i2 = 0; i2 < this.graph.size; i2++) { /*TODO: Peut-être peut on partir de i1 ? */
+                for (int i2 = i1+1; i2 < this.graph.size; i2++) {
                     /* Si i1 et i2 ne sont pas voisins, on ne continue pas avec cet i2 */
                     if (this.graph.matrix[i1][i2] == 0)
                         continue i1position;
