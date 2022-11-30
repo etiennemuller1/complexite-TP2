@@ -91,8 +91,9 @@ public class Stable {
      *
      * @param graph Le graphe dont on souhaite obtenir la réduction
      */
-    public Stable(Graph graph) {
+    public Stable(Graph graph, int stableSize) {
         this.graph = graph;
+        this.stableSize = stableSize;
     }
 
     /** Calcule toute la réduction SAT à partir du graphe

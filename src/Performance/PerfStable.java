@@ -13,6 +13,7 @@ import static Performance.Performance.getMean;
 
 public class PerfStable {
     final static private double PERF_GRAPH_DENSITY = 0.7;
+    final static private int STABLE_SIZE = 5;
 
     /** Calcule les performances des algorithmes liés aux graphes
      *
@@ -64,7 +65,7 @@ public class PerfStable {
      */
     private static BiFunction<Stable.Graph, Formule[], Long> reductionPerf = (graph, formulaContainer) -> {
         Instant before, after;
-        Stable stable = new Stable(graph);
+        Stable stable = new Stable(graph, STABLE_SIZE); /* FIXME: On VEUT pouvoir commander stableSize, pas que ce soit constant */
         Formule formule;
 
         before = Instant.now();
