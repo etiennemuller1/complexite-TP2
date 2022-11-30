@@ -100,10 +100,12 @@ public class Stable {
      * @return La formule générée
      */
     public Formule computeAndGetFormula() {
-        //clauses = new Formule();
-        
-        addAllNeighboursConstraints();
-        /*TODO: Rajouter les nouvelles contraintes */
+        clauses = new Formule(this.toVariableNb(this.graph.size-1, stableSize-1));
+
+        addConstraint_AtLeastStable();
+        addConstraint_UpToStable();
+        addConstraint_UpToStable();
+        addConstraint_Neighbours();
 
         return clauses;
     }
@@ -201,17 +203,6 @@ public class Stable {
         }
     }
 
-    /** Rajoute toutes les contraintes de voisinage du graphe */
-    private void addAllNeighboursConstraints() {
-        for (int vertex = 0; vertex < graph.size; vertex++) {
-            for (int neighbour = vertex; neighbour < graph.size; neighbour++) {
-                if (graph.matrix[vertex][neighbour] != 0)
-                    addNeighbourConstraint(vertex, neighbour);
-            }
-        }
-    }
-    /*TODO: Probablement à modifier avec les nouvelles variables */
-
     /** À partir d'une description de la variable de type v_{i,j} comme
      * utilisée dans le rapport, qui représente la variable en interne.
      * Attention tout de même, à la différence du rapport, on indice ici
@@ -238,22 +229,4 @@ public class Stable {
      *              3 | 13      14      15      16
      *              4 | 17      18      19      20
      */
-    
-    /** Rajoute une contrainte de voisinage pour le sommet et son voisin donnés
-     *  (si on prend le sommet, alors on ne prend pas son voisin)
-     *  Voir rapport pour plus de détails
-     *
-     * @param variableSommet Le sommet
-     * @param variableVoisin Son voisin
-     */
-    private void addNeighbourConstraint(int variableSommet, int variableVoisin) {
-        Clause constraint = new Clause();
-        constraint.add(-variableSommet);
-        constraint.add(-variableVoisin);
-
-        clauses.addClause(constraint);
-    }
-    /*TODO: Trèèès probablement à changer, comme un seul sommet ne va pas correspondre à une seule variable */
-
-
 }
