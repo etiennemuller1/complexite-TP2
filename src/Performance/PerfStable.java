@@ -3,6 +3,7 @@ package Performance;
 import main.Formule;
 import main.Stable;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.function.BiFunction;
@@ -10,6 +11,7 @@ import java.util.function.Function;
 
 import static Performance.Performance.NANOSECONDS_TO_SECONDS;
 import static Performance.Performance.getMean;
+import static main.Main.KISSAT_EXEC_PATH;
 
 public class PerfStable {
     final static private double PERF_GRAPH_DENSITY = 0.7;
@@ -97,10 +99,15 @@ public class PerfStable {
      */
     private static Function<Formule, Long> solverPerf = (formule) -> {
         Instant before, after;
+        ProcessBuilder kissatBuilder = new ProcessBuilder(KISSAT_EXEC_PATH, "tmp_formula.txt", "--relaxed");
+        kissatBuilder.inheritIO();
 
         before = Instant.now();
-        /* TODO */
-        after = Instant.now();
+        try {
+            Process kissat = kissatBuilder.start();
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'exéuction de kissat.");
+        }        after = Instant.now();
 
         return before.until(after, ChronoUnit.NANOS);
     };
