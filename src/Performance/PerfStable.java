@@ -21,7 +21,7 @@ public class PerfStable {
 
     /* Variable utilisée par get3DStablePerformance pour modifier le comportement de reductionPerf
     * par effet de bord… C'est vraiment pas joli-joli, mais ça devrait marcher */
-    static private int STABLE_SIZE_GLOBAL = 0;
+    static private int STABLE_SIZE_GLOBAL = 5;
 
     /** Calcule les performances des algorithmes liés aux graphes
      *
@@ -73,8 +73,12 @@ public class PerfStable {
             performance[0][graphSize] = new Double[graphSize+1];
             performance[1][graphSize] = new Double[graphSize+1];
             performance[2][graphSize] = new Double[graphSize+1];
+
+            System.out.print("Taille graphe : " + graphSize + "/" +  upTo + " ");
             for (int stableSize = 0; stableSize <= graphSize; stableSize++) {
                 STABLE_SIZE_GLOBAL = stableSize;
+
+                System.out.print("#");
 
                 /* On procède à plusieurs mesures afin de lisser la courbe
                  * et mieux capturer sa "tendance" */
@@ -93,6 +97,7 @@ public class PerfStable {
                 performance[1][graphSize][stableSize] = getMean(measures[1]);
                 performance[2][graphSize][stableSize] = getMean(measures[2]);
             }
+            System.out.println();
         }
 
         return performance;
@@ -189,7 +194,7 @@ public class PerfStable {
     private final static Function<Formule, Long> solverPerf = (formule) -> {
         Instant before, after;
         ProcessBuilder kissatBuilder = new ProcessBuilder(KISSAT_EXEC_PATH, "tmp_formula.txt", "--relaxed");
-        kissatBuilder.inheritIO();
+        //kissatBuilder.inheritIO();
 
         formule.createCNFFile("tmp_formula.txt");
 
