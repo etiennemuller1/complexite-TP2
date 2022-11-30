@@ -65,7 +65,7 @@ public class PerfStable {
      *                     le fait habituellement
      * retourne -> Le temps mis pour la réduction, en nanosecondes
      */
-    private static BiFunction<Stable.Graph, Formule[], Long> reductionPerf = (graph, formulaContainer) -> {
+    private final static BiFunction<Stable.Graph, Formule[], Long> reductionPerf = (graph, formulaContainer) -> {
         Instant before, after;
         Stable stable = new Stable(graph, STABLE_SIZE); /* FIXME: On VEUT pouvoir commander stableSize, pas que ce soit constant */
         Formule formule;
@@ -83,7 +83,7 @@ public class PerfStable {
      * formule -> La formule à résoudre
      * retourne -> Le temps mis pour la résolution, en nanosecondes
      */
-    private static Function<Formule, Long> bruteForcePerf = (formule) -> {
+    private final static Function<Formule, Long> bruteForcePerf = (formule) -> {
         Instant before, after;
 
         before = Instant.now();
@@ -97,7 +97,7 @@ public class PerfStable {
      * formule -> La formule à résoudre
      * retourne -> Le temps mis pour la résolution, en nanosecondes
      */
-    private static Function<Formule, Long> solverPerf = (formule) -> {
+    private final static Function<Formule, Long> solverPerf = (formule) -> {
         Instant before, after;
         ProcessBuilder kissatBuilder = new ProcessBuilder(KISSAT_EXEC_PATH, "tmp_formula.txt", "--relaxed");
         kissatBuilder.inheritIO();

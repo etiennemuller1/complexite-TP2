@@ -66,7 +66,7 @@ public class PerfSudoku {
      *                     le fait habituellement
      * retourne -> Le temps mis pour la réduction, en nanosecondes
      */
-    private static BiFunction<Sudoku, Formule[], Long> reductionPerf = (sudoku, formulaContainer) -> {
+    private final static BiFunction<Sudoku, Formule[], Long> reductionPerf = (sudoku, formulaContainer) -> {
         Instant before, after;
         Formule formule;
 
@@ -83,7 +83,7 @@ public class PerfSudoku {
      * formule -> La formule à résoudre
      * retourne -> Le temps mis pour la résolution, en nanosecondes
      */
-    private static Function<Formule, Long> solverPerf = (formule) -> {
+    private final static Function<Formule, Long> solverPerf = (formule) -> {
         Instant before, after;
         ProcessBuilder kissatBuilder = new ProcessBuilder(KISSAT_EXEC_PATH, "tmp_formula.txt", "--relaxed");
         kissatBuilder.inheritIO();
