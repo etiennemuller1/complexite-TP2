@@ -64,7 +64,7 @@ public class Stable {
             Random rand = new Random();
 
             /* Si les paramètres ont des valeurs illégales */
-            if (size <= 0 || (density > 1.0 || density < 0))
+            if (size < 0 || (density > 1.0 || density < 0))
                 throw new IllegalArgumentException();
 
             /* On parcourt toutes les paires non ordonnées d'arêtes */
