@@ -35,9 +35,17 @@ public class Main {
         PerfStable.exportStablePerformance(upTo, nbOfMeasures);
     }
 
+    public static void performanceStable3D() {
+        int nbOfMeasures = 5;
+        int upTo = 60;
+
+        PerfStable.export3DStablePerformance(upTo, nbOfMeasures);
+
+    }
+
     public static void performanceSudoku() {
-        int nbOfMeasures = 20;
-        int upTo = 30;
+        int nbOfMeasures = 30;
+        int upTo = 7;
 
         PerfSudoku.exportSudokuPerformance(upTo, nbOfMeasures);
     }
